@@ -3,5 +3,5 @@ project(fish)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES main.c)
+set(SOURCE_FILES main.c fish_lib/fish_lib.c fish_lib/fish_lib.h)
 add_executable(fish ${SOURCE_FILES})

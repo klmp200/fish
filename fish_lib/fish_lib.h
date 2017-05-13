@@ -6,18 +6,32 @@
 #define FISH_FISH_LIB_H
 
 typedef struct {
-    char * word;
-    size_t size;
-} Word;
+    char ** words;
+    int size;
+} WordArray;
 
-void fishLoop();
+typedef struct {
+    char *PS1;
+} Settings;
+
+/* WordArray functions */
+
+WordArray * split(char *string, char *separator);
+void freeWordArray(WordArray *array);
+
+/* Settings functions */
+
+Settings * getSettings();
+
+
+/* General purpose functions */
+
+void fishLoop(Settings * settings);
 
 char * fishReadLine();
 
-Word * split(char *string, char *separator);
+int countSeparators(char *string, char *separators);
 
-int countSeparator(char *string, char separator);
-
-void freeWordArray(Word *array, int size);
+char * fishExpand(char* line);
 
 #endif //FISH_FISH_LIB_H

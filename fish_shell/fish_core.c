@@ -54,7 +54,8 @@ WordArray * split(char *string, char *separator){
     int i = 0;
 
     if (tokens != NULL){
-        tokens->words = (char **) malloc(sizeof(char*) * array_size);
+        tokens->words = (char **) malloc(sizeof(char*) * (array_size + 1));
+        tokens->words[array_size] = NULL;
         tokens->size = array_size;
     }
 

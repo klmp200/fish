@@ -2,17 +2,12 @@
 // Created by Antoine Bartuccio on 11/05/2017.
 //
 
-#ifndef FISH_FISH_LIB_H
-#define FISH_FISH_LIB_H
+#ifndef FISH_FISH_CORE_H
+#define FISH_FISH_CORE_H
 
-typedef struct {
-    char ** words;
-    int size;
-} WordArray;
 
-typedef struct {
-    char *PS1;
-} Settings;
+#include "fish_types.h"
+#include "fish_commands.h"
 
 /* WordArray functions */
 
@@ -34,4 +29,8 @@ int countSeparators(char *string, char *separators);
 
 char * fishExpand(char* line);
 
-#endif //FISH_FISH_LIB_H
+int fishLoad(WordArray *array);
+
+int fishExecute(WordArray *array);
+
+#endif //FISH_FISH_CORE_H

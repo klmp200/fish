@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "fish_lib/fish_lib.h"
+#include "fish_shell/fish_core.h"
 
 int main() {
     /* todo load config file */

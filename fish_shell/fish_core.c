@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "fish_lib.h"
+#include <unistd.h>
+#include "fish_core.h"
 
 #define FISH_BUFFER_SIZE 1024
 #define FISH_TOKENS " \t\r\n\a"
@@ -12,24 +13,20 @@
 void fishLoop(Settings * settings){
     char * line = NULL;
     WordArray * splited = NULL;
-    int exited = 0;
-    int i;
+    int status = 1;
 
-    while (!exited) {
+    do {
         printf("%s", settings->PS1);
         line = fishReadLine();
         line = fishExpand(line);
 
         splited = split(line, FISH_TOKENS);
-        for (i = 0; i < splited->size; i++) {
-            printf("%s\n", splited->words[i]);
-            if(!strcmp(splited->words[i], "exit"))
-                exited = 1;
-        }
+
+        status = fishExecute(splited);
 
         freeWordArray(splited);
         free(line);
-    }
+    } while(status);
 }
 
 int countSeparators(char *string, char *separators) {
@@ -101,11 +98,14 @@ char *fishReadLine() {
     while (1){
         c = getchar();
 
-        if (c == EOF || c == '\n'){
-            line[position] = '\0';
-            return line;
-        } else {
-            line[position] = (char) c;
+        switch (c){
+            case '\n':
+                line[position] = '\0';
+                return line;
+            case EOF:
+                exit(EXIT_SUCCESS);
+            default:
+                line[position] = (char) c;
         }
 
         position++;
@@ -134,8 +134,48 @@ Settings *getSettings() {
         fprintf(stderr, "fish: Error allocating fucking settings");
         exit(EXIT_FAILURE);
     }
-    s->PS1 = strdup("~>");
+    s->PS1 = strdup("\n~>");
 
     return s;
 }
 
+int fishLoad(WordArray *array) {
+    pid_t pid;
+    int status;
+
+    pid = fork();
+    if (pid == 0){
+        /* Executes only in the child process */
+        if (execvp(array->words[0], array->words) == -1){
+            /* Error during system call */
+            perror("fish");
+        }
+        exit(EXIT_FAILURE);
+    } else if (pid < 0){
+        /* Fork failed */
+        perror("fish");
+    } else {
+        /* Handle parent process */
+
+        /* Wait for the child process to finish */
+        do {
+            waitpid(pid, &status, WUNTRACED);
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    }
+
+    return 1;
+}
+
+int fishExecute(WordArray *array) {
+    int i;
+    if (array->size < 0)
+        return 1;
+
+    for (i=0; i < getNbBuiltins(); i++){
+        if (!strcmp(array->words[0], getBuiltinCommandsStr()[i])){
+            return getBuiltinCommands()[i](array);
+        }
+    }
+
+    return fishLoad(array);
+}

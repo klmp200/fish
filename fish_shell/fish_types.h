@@ -12,6 +12,18 @@ typedef struct {
 	int size;
 } WordArray;
 
+typedef struct elem {
+	char * word;
+	struct elem * previous;
+	struct elem * next;
+} WordListElement;
+
+typedef struct {
+	int size;
+	WordListElement * first;
+	WordListElement * last;
+} WordList;
+
 typedef struct {
 	char *PS1;
 } Settings;

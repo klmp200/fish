@@ -13,7 +13,6 @@
 /* WordArray functions */
 
 WordArray * split(char *string, char *separator);
-void freeWordArray(WordArray *array);
 
 /* Settings functions */
 

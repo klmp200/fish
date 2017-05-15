@@ -75,18 +75,6 @@ WordArray * split(char *string, char *separator){
 	return tokens;
 }
 
-void freeWordArray(WordArray *array) {
-	int i;
-	if (array != NULL) {
-		for (i = 0; i < array->size; i++) {
-			free(array->words[i]);
-		}
-		free(array->words);
-		free(array);
-	}
-
-}
-
 char *fishReadLine() {
 	size_t bufferSize = FISH_BUFFER_SIZE;
 	int position = 0;

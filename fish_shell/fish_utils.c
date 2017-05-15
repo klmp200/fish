@@ -10,10 +10,10 @@
 
 void crash(){
 	char *crashErrors[] = {
-			"fish: Fucking malloc always returning NULL pointer !",
-			"fish: Error allocating fucking pointer !",
-			"fish: C language exploding again",
-			"fish: It's not you're fault for this time"
+			(char *) "fish: Fucking malloc always returning NULL pointer !",
+			(char *) "fish: Error allocating fucking pointer !",
+			(char *) "fish: C language exploding again",
+			(char *) "fish: It's not you're fault for this time"
 	};
 	int picked = 0;
 
@@ -28,9 +28,9 @@ char *getInsult(){
 	static int init = 0;
 	int picked = 0;
 	char *insults[] = {
-			"Apprend à écrire crétin !",
-			"Bolos !",
-			"Mois aussi je sais écrire de la merde, pourtant je le fait pas !"
+			(char *) "Apprend à écrire crétin !",
+			(char *) "Bolos !",
+			(char *) "Mois aussi je sais écrire de la merde, pourtant je le fait pas !"
 	};
 	if (!init){
 		srand((unsigned int) time(NULL));
@@ -67,19 +67,19 @@ WordList *createWordList() {
 }
 
 void addWordList(WordList *list, char *word) {
-	WordListElement *new = (WordListElement*) malloc(sizeof(WordListElement));
-	if (new == NULL) crash();
+	WordListElement *newElement = (WordListElement*) malloc(sizeof(WordListElement));
+	if (newElement == NULL) crash();
 	else {
-		new->next = NULL;
-		new->previous = list->last;
+		newElement->next = NULL;
+		newElement->previous = list->last;
 		if (list->size == 0){
-			list->first = new;
-			list->last = new;
+			list->first = newElement;
+			list->last = newElement;
 		} else {
-			list->last->next = new;
-			list->last = new;
+			list->last->next = newElement;
+			list->last = newElement;
 		}
-		new->word = strdup(word);
+		newElement->word = strdup(word);
 		list->size++;
 	}
 }

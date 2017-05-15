@@ -48,31 +48,21 @@ int countSeparators(char *string, char *separators) {
 }
 
 WordArray * split(char *string, char *separator){
-	int array_size = countSeparators(string, separator) + 1;
-	WordArray *tokens = (WordArray*) malloc(sizeof(WordArray));
+	WordList *list = createWordList();
 	char *to_delete = strdup(string);
 	char *to_delete_bak = to_delete;
 	char *token = NULL;
-	int i = 0;
 
-	if (tokens != NULL){
-		tokens->words = (char **) malloc(sizeof(char*) * (array_size + 1));
-		tokens->words[array_size] = NULL;
-		tokens->size = array_size;
-	}
-
-	if (tokens == NULL || to_delete == NULL || tokens->words == NULL){
+	if (to_delete == NULL){
 		crash();
 	}
 
-	while((token = strsep(&to_delete, separator)) != NULL){
-		tokens->words[i] = strdup(token);
-		i++;
-	}
+	while((token = strsep(&to_delete, separator)) != NULL)
+		addWordList(list, token);
 
 	free(to_delete_bak);
 
-	return tokens;
+	return wordListToWordArray(list);
 }
 
 char *fishReadLine() {

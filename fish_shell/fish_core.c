@@ -62,8 +62,7 @@ WordArray * split(char *string, char *separator){
 	}
 
 	if (tokens == NULL || to_delete == NULL || tokens->words == NULL){
-		fprintf(stderr, "fish: Error allocating fucking pointer !");
-		exit(EXIT_FAILURE);
+		crash();
 	}
 
 	while((token = strsep(&to_delete, separator)) != NULL){
@@ -95,8 +94,7 @@ char *fishReadLine() {
 	int c;
 
 	if (line == NULL){
-		fprintf(stderr, "fish: Error allocating fucking buffer shit !");
-		exit(EXIT_FAILURE);
+		crash();
 	}
 
 	while (1){
@@ -118,8 +116,7 @@ char *fishReadLine() {
 			bufferSize+=bufferSize;
 			line = realloc(line, bufferSize);
 			if (line == NULL){
-				fprintf(stderr, "fish: Error allocating fucking buffer shit !");
-				exit(EXIT_FAILURE);
+				crash();
 			}
 		}
 	}
@@ -135,8 +132,7 @@ char *fishExpand(char *line) {
 Settings *getSettings() {
 	Settings *s = (Settings*) malloc(sizeof(Settings));
 	if (s == NULL){
-		fprintf(stderr, "fish: Error allocating fucking settings");
-		exit(EXIT_FAILURE);
+		crash();
 	}
 	s->PS1 = strdup("\n~>");
 

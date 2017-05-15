@@ -8,6 +8,7 @@
 
 #include "fish_types.h"
 #include "fish_commands.h"
+#include "fish_utils.h"
 
 /* WordArray functions */
 

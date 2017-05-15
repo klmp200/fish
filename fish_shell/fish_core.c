@@ -23,7 +23,7 @@ void fishLoop(Settings * settings){
         printf("%s", settings->PS1);
         line = fishReadLine();
 
-        splited = split(line, FISH_TOKENS);
+        splited = split(line, (char*) FISH_TOKENS);
 		splited = fishExpand(splited);
 
 		array = wordListToWordArray(splited);
@@ -72,7 +72,7 @@ WordList * split(char *string, char *separator){
 char *fishReadLine() {
 	size_t bufferSize = FISH_BUFFER_SIZE;
 	int position = 0;
-	char *line = malloc(sizeof(char*) * bufferSize);
+	char *line = (char*) malloc(sizeof(char*) * bufferSize);
 	int c;
 
 	if (line == NULL){
@@ -96,7 +96,7 @@ char *fishReadLine() {
 
 		if ((size_t) position > bufferSize){
 			bufferSize+=bufferSize;
-			line = realloc(line, bufferSize);
+			line = (char*) realloc(line, bufferSize);
 			if (line == NULL){
 				crash();
 			}

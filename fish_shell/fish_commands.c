@@ -7,9 +7,9 @@
 
 /* Necessary global variables */
 char * builtinCommandsStr[] = {
-		"cd",
-		"help",
-		"exit"
+		(char *) "cd",
+		(char *) "help",
+		(char *) "exit"
 };
 
 

@@ -8,12 +8,12 @@
 /* Custom types */
 
 typedef struct {
-    char ** words;
-    int size;
+	char ** words;
+	int size;
 } WordArray;
 
 typedef struct {
-    char *PS1;
+	char *PS1;
 } Settings;
 
 

@@ -25,4 +25,6 @@ WordArray * wordListToWordArray(WordList *list);
 
 WordList * wordArrayToWordList(WordArray * array);
 
+WordList* concatWordList(WordList* list1, WordList* list2);
+
 #endif //FISH_FISH_UTILS_H

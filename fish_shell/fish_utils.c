@@ -30,7 +30,7 @@ char *getInsult(){
 	char *insults[] = {
 			"Apprend à écrire crétin !",
 			"Bolos !",
-			"Mois aussi je sais écrire de la merde, pourtant je le fait pas !"
+			"Moi aussi je sais écrire de la merde, pourtant je le fait pas !"
 	};
 	if (!init){
 		srand((unsigned int) time(NULL));
@@ -101,6 +101,22 @@ void freeWordList(WordList *list) {
 	while (list->size != 0)
 		removeWordList(list);
 	free(list);
+}
+
+WordList* concatWordList(WordList* list1, WordList* list2){
+
+	if(list1->last != NULL){
+		list1->last->next = list2->first;
+		list2->first->previous = list1->last;
+		list1->last = list2->last;
+		list1->size = list1->size + list2->size;
+		free(list2);
+		return list1;
+	}
+	else{
+		return NULL;
+	}
+
 }
 
 WordArray *wordListToWordArray(WordList *list) {

@@ -7,14 +7,7 @@
 
 WordList * fishExpand(WordList *wordArray) {
 
-	int i;
-	//WordArray* splitParameter;
-
-	for(i=1; i<wordArray->size; i++){
-
-
-
-	}
+	wordArray = expandInDir("./", "*");
 
 	return wordArray;
 
@@ -47,8 +40,15 @@ WordArray * getFiles(char* path){
 
 		while((dir = readdir(directory)) != NULL){
 
-			files->words[i] = dir->d_name;
+			/*if(dir->d_name != "." && dir->d_name != ".."){*/
 
+				printf("%s\n", dir->d_name);
+				files->words[i] = dir->d_name;
+				i++;
+				files->size++;
+
+			//}
+			
 		}
 
 
@@ -117,6 +117,27 @@ int comparator(char* string1, char* string2){//TODO
 		return 0;
 
 	}
+
+}
+
+WordList* expandInDir(char* dir, char* toExpand){
+
+	int i = 0;
+	WordList* list = createWordList();
+	WordArray* files = getFiles(dir);
+
+	for(i=0; i<files->size;i++){
+
+		if(comparator(toExpand, files->words[i])){
+
+			addWordList(list, files->words[i]);
+
+		}
+
+	}
+
+
+	return list;
 
 }
 

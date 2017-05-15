@@ -8,7 +8,7 @@
 WordArray* fishExpand(WordArray *wordArray) {
 
 	int i;
-	WordArray* splitParameter;
+	//WordArray* splitParameter;
 
 	for(i=1; i<wordArray->size; i++){
 

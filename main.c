@@ -6,8 +6,7 @@ int main() {
 	/* todo load config file */
 	Settings *s = getSettings();
 	fishLoop(s);
-	free(s->PS1);
-	free(s);
+	freeSettings(s);
 
 	return EXIT_SUCCESS;
 }

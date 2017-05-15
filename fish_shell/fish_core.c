@@ -51,6 +51,7 @@ WordArray * split(char *string, char *separator){
 	int array_size = countSeparators(string, separator) + 1;
 	WordArray *tokens = (WordArray*) malloc(sizeof(WordArray));
 	char *to_delete = strdup(string);
+	char *to_delete_bak = to_delete;
 	char *token = NULL;
 	int i = 0;
 
@@ -70,7 +71,7 @@ WordArray * split(char *string, char *separator){
 		i++;
 	}
 
-	free(to_delete);
+	free(to_delete_bak);
 
 	return tokens;
 }
@@ -81,6 +82,7 @@ void freeWordArray(WordArray *array) {
 		for (i = 0; i < array->size; i++) {
 			free(array->words[i]);
 		}
+		free(array->words);
 		free(array);
 	}
 
@@ -139,6 +141,13 @@ Settings *getSettings() {
 	s->PS1 = strdup("\n~>");
 
 	return s;
+}
+
+void freeSettings(Settings *settings){
+	if (settings != NULL){
+		free(settings->PS1);
+		free(settings);
+	}
 }
 
 int fishLoad(WordArray *array) {

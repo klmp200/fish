@@ -42,7 +42,7 @@ int fishHelp(WordArray *args) {
 	int i;
 	printf("Bartuccio Antoine, Amalvy Arthur, Yann Chevanton\n");
 	printf("Tape tes putains de noms de programmes et tes arguments de merde et tabasse ENTER !\n");
-	printf("Les commandes suivantes sont internes :\nls");
+	printf("Les commandes suivantes sont internes :\n");
 	for (i=0; i < getNbBuiltins(); i++){
 		printf("\t%s\n", builtinCommandsStr[i]);
 	}

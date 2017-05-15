@@ -17,6 +17,7 @@ void freeWordArray(WordArray *array);
 /* Settings functions */
 
 Settings * getSettings();
+void freeSettings(Settings *settings);
 
 
 /* General purpose functions */

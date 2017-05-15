@@ -28,7 +28,6 @@ char * fishReadLine();
 
 int countSeparators(char *string, char *separators);
 
-char * fishExpand(char* line);
 
 int fishLoad(WordArray *array);
 

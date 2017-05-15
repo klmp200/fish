@@ -8,17 +8,11 @@
 WordArray* fishExpand(WordArray *wordArray) {
 
 	int i;
-	//int j;
 	WordArray* splitParameter;
 
 	for(i=1; i<wordArray->size; i++){
 
-		splitParameter = split(wordArray->words[i], "/");
-		printf("%s", splitParameter->words[0]);
 
-		/*for(j=0; i<splitParameter->size; j++){
-			printf("%s", splitParameter->words[j]);
-		}*/
 
 	}
 

@@ -5,11 +5,40 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "fish_types.h"
 
 void crash(){
-	fprintf(stderr, "fish: Error allocating fucking pointer !");
+	char *crashErrors[] = {
+			"fish: Fucking malloc always returning NULL pointer !",
+			"fish: Error allocating fucking pointer !",
+			"fish: C language exploding again",
+			"fish: It's not you're fault for this time"
+	};
+	int picked = 0;
+
+	srand((unsigned int) time(NULL));
+	picked = rand() % (sizeof(crashErrors) / sizeof(char*));
+
+	fprintf(stderr, "%s\n", crashErrors[picked]);
 	exit(EXIT_FAILURE);
+}
+
+char *getInsult(){
+	static int init = 0;
+	int picked = 0;
+	char *insults[] = {
+			"Apprend à écrire crétin !",
+			"Bolos !",
+			"Mois aussi je sais écrire de la merde, pourtant je le fait pas !"
+	};
+	if (!init){
+		srand((unsigned int) time(NULL));
+		init = 1;
+	}
+
+	picked = rand() % (sizeof(insults) / sizeof(char*));
+	return insults[picked];
 }
 
 void freeWordArray(WordArray *array) {

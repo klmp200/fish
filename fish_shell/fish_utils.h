@@ -9,6 +9,8 @@
 
 void crash();
 
+char *getInsult();
+
 void freeWordArray(WordArray *array);
 
 WordList * createWordList();

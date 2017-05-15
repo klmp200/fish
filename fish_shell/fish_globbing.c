@@ -8,10 +8,17 @@
 WordArray* fishExpand(WordArray *wordArray) {
 
 	int i;
-	WordArray* expandedParameters = (WordArray*) malloc(sizeof(WordArray));
+	//int j;
+	WordArray* splitParameter;
 
-	for(i=0; i<wordArray->size; i++){
+	for(i=1; i<wordArray->size; i++){
 
+		splitParameter = split(wordArray->words[i], "/");
+		printf("%s", splitParameter->words[0]);
+
+		/*for(j=0; i<splitParameter->size; j++){
+			printf("%s", splitParameter->words[j]);
+		}*/
 
 	}
 
@@ -57,32 +64,52 @@ WordArray * getFiles(char* path){
 
 }
 
-bool comparator(char* string1, char* string2){//TODO
+int comparator(char* string1, char* string2){//TODO
 
 	int i = 0;
+	char tempIChar;
+	int j = 0;
 
 	if(string1 != NULL && string2 != NULL){
 
-		while(string1[i] != '\0' && string2[i] != '\0'){
-			
-			if(string1[i] != string2[i] && string1[i] != '?'){
+		while(string1[i] != '\0' && string2[j] != '\0'){
 
-				return false;
+			if(string1[i] == '*'){
+
+				tempIChar = string1[i+1];
+
+				while(string2[j] != tempIChar){
+
+					j++;
+
+					if(string2[j] == '\0' && tempIChar == '\0'){
+						return 1;
+					}
+
+				}
+				i++;
+
+			}
+
+			if(string1[i] != string2[j] && string1[i] != '?'){
+
+				return 0;
 
 			}
 
 			i++;
+			j++;
 
 		}
 
-		if(string1[i] == '\0' && string2[i] == '\0'){
+		if(string1[i] == '\0' && string2[j] == '\0'){
 
-			return true;
+			return 1;
 
 		}
 		else{
 
-			return false;
+			return 0;
 
 		}
 
@@ -93,7 +120,7 @@ bool comparator(char* string1, char* string2){//TODO
 
 		printf("warning : fuck you, strings are considered null");
 		crash();
-		return false;
+		return 0;
 
 	}
 

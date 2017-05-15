@@ -1,5 +1,6 @@
 //
 // Created by Antoine Bartuccio on 11/05/2017.
+// Dont forget that Antoine Bartuccio is a faggot since 1784 (tm)
 //
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,6 +8,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include "fish_core.h"
+#include "fish_globbing.h"
 
 #define FISH_BUFFER_SIZE 1024
 #define FISH_TOKENS " \t\r\n\a"
@@ -16,12 +18,12 @@ void fishLoop(Settings * settings){
 	WordArray * splited = NULL;
 	int status = 1;
 
-	do {
-		printf("%s", settings->PS1);
-		line = fishReadLine();
-		line = fishExpand(line);
+    do {
+        printf("%s", settings->PS1);
+        line = fishReadLine();
 
-		splited = split(line, FISH_TOKENS);
+        splited = split(line, FISH_TOKENS);
+		splited = fishExpand(splited);
 
 		status = fishExecute(splited);
 
@@ -111,10 +113,6 @@ char *fishReadLine() {
 
 
 	return NULL;
-}
-
-char *fishExpand(char *line) {
-	return line;
 }
 
 Settings *getSettings() {

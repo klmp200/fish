@@ -59,7 +59,43 @@ WordArray * getFiles(char* path){
 
 bool comparator(char* string1, char* string2){//TODO
 
-	return true;
+	int i = 0;
+
+	if(string1 != NULL && string2 != NULL){
+
+		while(string1[i] != '\0' && string2[i] != '\0'){
+			
+			if(string1[i] != string2[i] && string1[i] != '?'){
+
+				return false;
+
+			}
+
+			i++;
+
+		}
+
+		if(string1[i] == '\0' && string2[i] == '\0'){
+
+			return true;
+
+		}
+		else{
+
+			return false;
+
+		}
+
+
+	}
+
+	else{
+
+		printf("warning : fuck you, strings are considered null");
+		crash();
+		return false;
+
+	}
 
 }
 

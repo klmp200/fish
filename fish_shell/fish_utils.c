@@ -30,6 +30,7 @@ char *getInsult(){
 	static int init = 0;
 	int picked = 0;
 	char *insults[] = {
+<<<<<<< HEAD
 			(char *) "Apprend à écrire crétin !",
 			(char *) "Boloss !",
 			(char *) "Mois aussi je sais écrire de la merde, pourtant je le fait pas !",
@@ -37,6 +38,11 @@ char *getInsult(){
 			(char *) "Nul !",
 			(char *) "Pense à aller à l'école un jour",
 			(char *) "Et après on dit que c'est la faute de l'ordinateur..."
+=======
+			"Apprend à écrire crétin !",
+			"Bolos !",
+			"Moi aussi je sais écrire de la merde, pourtant je le fait pas !"
+>>>>>>> Black mage of regex stikes again
 	};
 	if (!init){
 		srand((unsigned int) time(NULL));
@@ -115,6 +121,22 @@ void freeWordList(WordList *list) {
 	while (list != NULL && list->size != 0)
 		removeWordList(list);
 	free(list);
+}
+
+WordList* concatWordList(WordList* list1, WordList* list2){
+
+	if(list1->last != NULL){
+		list1->last->next = list2->first;
+		list2->first->previous = list1->last;
+		list1->last = list2->last;
+		list1->size = list1->size + list2->size;
+		free(list2);
+		return list1;
+	}
+	else{
+		return NULL;
+	}
+
 }
 
 WordArray *wordListToWordArray(WordList *list) {

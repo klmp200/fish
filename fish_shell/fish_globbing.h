@@ -11,4 +11,6 @@ WordArray* getFiles(char* path);
 /*char1 is a string with characters such as '*', '.' or '?' having special meanings*/
 int comparator(char* string1, char* string2);
 
+WordList* expandInDir(char*, char*);
+
 #endif //FISH_FISH_GLOBBING_H

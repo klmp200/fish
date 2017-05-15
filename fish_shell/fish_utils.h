@@ -35,4 +35,6 @@ WordList * splitWordList(WordList *list, char *regex);
 
 char * splitWord(char * origin, int beginning_index, int size_to_delete); // Tested
 
+WordList* concatWordList(WordList* list1, WordList* list2);
+
 #endif //FISH_FISH_UTILS_H

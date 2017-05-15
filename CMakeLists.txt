@@ -44,9 +44,16 @@ include_directories(
         "${source_dir}/googlemock/include"
 )
 
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_FLAGS "-Wall -Werror -pedantic -fpic -Wextra -Wshadow")
+
 add_subdirectory(fish_shell)
+
 add_subdirectory(fish_shell_tests)
+
 
 enable_testing()
 
-add_test(fish_tests fish_shell_tests/fish_tests)
+add_test(NAME fish_tests
+        COMMAND fish_tests
+)

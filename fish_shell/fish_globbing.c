@@ -5,7 +5,7 @@
 #include "fish_core.h"
 #include "fish_globbing.h"
 
-WordArray* fishExpand(WordArray *wordArray) {
+WordList * fishExpand(WordList *wordArray) {
 
 	int i;
 	//WordArray* splitParameter;

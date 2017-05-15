@@ -12,7 +12,7 @@
 
 /* WordArray functions */
 
-WordArray * split(char *string, char *separator);
+WordList * split(char *string, char *separator);
 
 /* Settings functions */
 

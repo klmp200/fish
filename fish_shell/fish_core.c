@@ -15,7 +15,8 @@
 
 void fishLoop(Settings * settings){
 	char * line = NULL;
-	WordArray * splited = NULL;
+	WordList* splited = NULL;
+	WordArray* array = NULL;
 	int status = 1;
 
     do {
@@ -25,9 +26,10 @@ void fishLoop(Settings * settings){
         splited = split(line, FISH_TOKENS);
 		splited = fishExpand(splited);
 
-		status = fishExecute(splited);
+		array = wordListToWordArray(splited);
+		status = fishExecute(array);
 
-		freeWordArray(splited);
+		freeWordArray(array);
 		free(line);
 	} while(status);
 }
@@ -49,7 +51,7 @@ int countSeparators(char *string, char *separators) {
 	return nb;
 }
 
-WordArray * split(char *string, char *separator){
+WordList * split(char *string, char *separator){
 	WordList *list = createWordList();
 	char *to_delete = strdup(string);
 	char *to_delete_bak = to_delete;
@@ -64,7 +66,7 @@ WordArray * split(char *string, char *separator){
 
 	free(to_delete_bak);
 
-	return wordListToWordArray(list);
+	return list;
 }
 
 char *fishReadLine() {
@@ -109,8 +111,9 @@ Settings *getSettings() {
 	Settings *s = (Settings*) malloc(sizeof(Settings));
 	if (s == NULL){
 		crash();
+	} else {
+		s->PS1 = strdup("\n~>");
 	}
-	s->PS1 = strdup("\n~>");
 
 	return s;
 }

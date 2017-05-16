@@ -5,6 +5,10 @@
 #ifndef FISH_FISH_CORE_H
 #define FISH_FISH_CORE_H
 
+#define FISH_BUFFER_SIZE 1024
+#define FISH_TOKENS " \t\r\n\a"
+
+
 
 #include "fish_types.h"
 #include "fish_commands.h"
@@ -12,7 +16,7 @@
 
 /* WordArray functions */
 
-WordList * split(char *string, char *separator);
+WordList * split(char *string, char *separator); // Tested
 
 /* Settings functions */
 
@@ -26,7 +30,7 @@ void fishLoop(Settings * settings);
 
 char * fishReadLine();
 
-int countSeparators(char *string, char *separators);
+int countSeparators(char *string, char *separators); // Tested
 
 
 int fishLoad(WordArray *array);

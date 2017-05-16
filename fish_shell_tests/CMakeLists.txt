@@ -11,7 +11,7 @@ include_directories(
         "${source_dir}/googlemock/include"
 )
 
-file(GLOB SOURCE_FILES_TESTS *)
+set(SOURCE_FILES_TESTS main.cpp FishCoreTests.cpp FishUtilsTests.cpp)
 
 add_executable(fish_tests ${SOURCE_FILES_TESTS})
 

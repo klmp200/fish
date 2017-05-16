@@ -2,16 +2,9 @@
 // Created by Antoine Bartuccio on 15/05/2017.
 //
 
-#include "FishCoreTests.h"
-#include "../fish_shell/fish_core.c"
-#include "../fish_shell/fish_utils.c"
-#include "../fish_shell/fish_commands.c"
-#include "../fish_shell/fish_globbing.c"
-
-
-//TEST_F(FishCoreTests, split){
-//	ASSERT_TRUE(true);
-//}
+#include "gtest/gtest.h"
+#include "../fish_shell/fish_types.h"
+#include "../fish_shell/fish_core.h"
 
 TEST(command_split, split){
 	char input[] = "git push --force";
@@ -33,4 +26,8 @@ TEST(command_split, split){
 
 	freeWordList(list);
 
+}
+
+TEST(count_tokens, countSeparators){
+	ASSERT_TRUE(countSeparators((char*) "Ceci est un super \n test", (char*) FISH_TOKENS) == 6);
 }

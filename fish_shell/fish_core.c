@@ -10,9 +10,6 @@
 #include "fish_core.h"
 #include "fish_globbing.h"
 
-#define FISH_BUFFER_SIZE 1024
-#define FISH_TOKENS " \t\r\n\a"
-
 void fishLoop(Settings * settings){
 	char * line = NULL;
 	WordList* splited = NULL;

@@ -50,7 +50,6 @@ void freeWordArray(WordArray *array) {
 		free(array->words);
 		free(array);
 	}
-
 }
 
 

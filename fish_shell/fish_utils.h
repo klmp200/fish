@@ -7,22 +7,22 @@
 
 #include "fish_types.h"
 
-void crash();
+void crash(); // Tested
 
-char *getInsult();
+char *getInsult(); // Tested
 
-void freeWordArray(WordArray *array);
+void freeWordArray(WordArray *array); // Tested
 
-WordList * createWordList();
+WordList * createWordList(); // Tested
 
-void addWordList(WordList *list, char *word);
+void addWordList(WordList *list, char *word); // Tested
 
-void removeWordList(WordList *list);
+void removeWordList(WordList *list); // Tested
 
-void freeWordList(WordList *list);
+void freeWordList(WordList *list); // Tested
 
-WordArray * wordListToWordArray(WordList *list);
+WordArray * wordListToWordArray(WordList *list); // Tested
 
-WordList * wordArrayToWordList(WordArray * array);
+WordList * wordArrayToWordList(WordArray * array); // Tested
 
 #endif //FISH_FISH_UTILS_H

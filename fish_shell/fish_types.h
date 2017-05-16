@@ -5,6 +5,8 @@
 #ifndef FISH_FISH_TYPES_H
 #define FISH_FISH_TYPES_H
 
+#define EXIT_SIGNAL -100
+
 /* Custom types */
 
 typedef enum {

@@ -20,14 +20,14 @@ void fishLoop(Settings * settings){
         printf("%s", settings->PS1);
         line = fishReadLine();
 
-        splited = split(line, (char*) FISH_TOKENS);
+		splited = split(line, (char*) FISH_TOKENS);
 		splited = fishExpand(splited);
 
 		status = fishExecute(splited);
 
 		free(line);
 
-	} while(status);
+	} while(status != EXIT_SIGNAL);
 }
 
 int countSeparators(char *string, char *separators) {
@@ -152,24 +152,32 @@ int fishExecute(WordList *list) {
 	WordList *splited = NULL;
 	shell_operator op = NONE;
 	WordArray *array = NULL;
+	int signal = 1;
 
 	splited = parseWordList(list, &op);
 	array = wordListToWordArray(list);
 
+	signal = loadRightCommand(array);
+	if (signal == EXIT_SIGNAL){
+		if (splited != NULL) freeWordList(splited);
+		if (array != NULL) freeWordArray(array);
+		return signal;
+	}
 	switch (op) {
 		case AND:
-			if (!loadRightCommand(array)) fishExecute(splited);
-			else freeWordList(splited);
+			if (!signal) signal = fishExecute(splited);
+			else {
+				if (splited != NULL) freeWordList(splited);
+			}
 			break;
 		case OR:
-			loadRightCommand(array);
-			fishExecute(splited);
+			signal = fishExecute(splited);
 			break;
 		default:
-			loadRightCommand(array);
+			break;
 	}
+	return signal;
 
-	return 1;
 }
 
 int loadRightCommand(WordArray *array){
@@ -185,12 +193,12 @@ int loadRightCommand(WordArray *array){
 
 WordList * parseWordList(WordList *list, shell_operator *an_operator) {
 	char *op_str[] = {
-			(char*) "&&",
-			(char*) "||"
+			(char*) "||",
+			(char*) "&&"
 	};
 	shell_operator op[] = {
-			AND,
-			OR
+			OR,
+			AND
 	};
 	WordList *newList = NULL;
 	int max = sizeof(op_str) / sizeof(char*);

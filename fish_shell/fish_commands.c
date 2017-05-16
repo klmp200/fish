@@ -55,7 +55,7 @@ int fishHelp(WordArray *args) {
 
 int fishExit(WordArray *args) {
 	args->size = args->size;
-	exit(EXIT_SUCCESS);
+	return EXIT_SIGNAL;
 
 }
 

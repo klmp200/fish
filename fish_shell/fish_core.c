@@ -158,8 +158,13 @@ int fishExecute(WordArray *array) {
 		return 1;
 
 	for (i=0; i < getNbBuiltins(); i++){
-		if (!strcmp(array->words[0], getBuiltinCommandsStr()[i])){
-			return getBuiltinCommands()[i](array);
+		if(array->words[0] != NULL){
+			if (!strcmp(array->words[0], getBuiltinCommandsStr()[i])){
+				return getBuiltinCommands()[i](array);
+			}
+		}
+		else{
+			crash();
 		}
 	}
 

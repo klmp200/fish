@@ -13,4 +13,6 @@ int comparator(char* string1, char* string2);
 
 WordList* expandInDir(char*, char*);
 
+WordList* recursiveExpand(char* completePath);
+
 #endif //FISH_FISH_GLOBBING_H

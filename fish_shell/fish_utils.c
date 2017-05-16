@@ -105,7 +105,8 @@ void freeWordList(WordList *list) {
 
 WordList* concatWordList(WordList* list1, WordList* list2){
 
-	if(list1->last != NULL){
+
+	if(list1 != NULL && list2 != NULL && list1->size >= 1 && list2->size >=1){
 		list1->last->next = list2->first;
 		list2->first->previous = list1->last;
 		list1->last = list2->last;
@@ -154,4 +155,20 @@ WordList *wordArrayToWordList(WordArray *array) {
 	freeWordArray(array);
 
 	return list;
+}
+
+int stringContains(char * string, char charToTest){
+
+	int i = 0;
+
+	while(string[i] != '\0'){
+
+		if(string[i] != charToTest){
+			return 0;
+		}
+		i++;
+	}
+
+	return 1;
+	
 }

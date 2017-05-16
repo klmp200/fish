@@ -2,17 +2,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <string.h>
 #include "fish_core.h"
 #include "fish_globbing.h"
 
-WordList * fishExpand(WordList *wordArray) {
+WordList * fishExpand(WordList *wordList) {
 
-	wordArray = expandInDir("./", "*");
+	if(wordList->size > 1){
+		int i;
 
-	return wordArray;
+		WordList* newWordList = createWordList();
 
+		if(newWordList == NULL){
+			crash();
+		}
+
+		newWordList->first = wordList->first;
+
+		newWordList->size = 0;
+
+		WordListElement* tempElement = wordList->first->next;
+
+		for(i=0; i<wordList->size; i++){
+
+			//newWordList = concatWordList(newWordList, recursiveExpand(tempElement->word));
+			//newWordList = concatWordList(newWordList, NULL);
+
+			if(tempElement != NULL){
+
+				tempElement = tempElement->next;
+
+			}
+		}
+
+		return newWordList;
+	
+	}
+
+	else return wordList;
 }
 
+
+WordList* recursiveExpand(char * completePath){
+
+	if (stringContains(completePath, '/')){
+
+		return expandInDir("./",completePath);
+
+	}
+
+	return NULL;
+
+}
 
 
 WordArray * getFiles(char* path){
@@ -20,6 +61,7 @@ WordArray * getFiles(char* path){
 	DIR* directory;
 	dirent* dir;
 	int i = 0;
+
 
 	WordArray* files = (WordArray*) malloc(sizeof(WordArray));
 
@@ -40,14 +82,14 @@ WordArray * getFiles(char* path){
 
 		while((dir = readdir(directory)) != NULL){
 
-			/*if(dir->d_name != "." && dir->d_name != ".."){*/
+			if(!strcmp(dir->d_name, ".") && !strcmp(dir->d_name, "..")){
 
 				printf("%s\n", dir->d_name);
 				files->words[i] = dir->d_name;
 				i++;
 				files->size++;
 
-			//}
+			}
 			
 		}
 

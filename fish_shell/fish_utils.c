@@ -30,7 +30,6 @@ char *getInsult(){
 	static int init = 0;
 	int picked = 0;
 	char *insults[] = {
-<<<<<<< HEAD
 			(char *) "Apprend à écrire crétin !",
 			(char *) "Boloss !",
 			(char *) "Mois aussi je sais écrire de la merde, pourtant je le fait pas !",
@@ -38,11 +37,6 @@ char *getInsult(){
 			(char *) "Nul !",
 			(char *) "Pense à aller à l'école un jour",
 			(char *) "Et après on dit que c'est la faute de l'ordinateur..."
-=======
-			"Apprend à écrire crétin !",
-			"Bolos !",
-			"Moi aussi je sais écrire de la merde, pourtant je le fait pas !"
->>>>>>> Black mage of regex stikes again
 	};
 	if (!init){
 		srand((unsigned int) time(NULL));
@@ -125,7 +119,8 @@ void freeWordList(WordList *list) {
 
 WordList* concatWordList(WordList* list1, WordList* list2){
 
-	if(list1->last != NULL){
+
+	if(list1 != NULL && list2 != NULL && list1->size >= 1 && list2->size >=1){
 		list1->last->next = list2->first;
 		list2->first->previous = list1->last;
 		list1->last = list2->last;
@@ -285,3 +280,18 @@ WordList *splitWordList(WordList *list, char *regex) {
 	return new_list;
 }
 
+int stringContains(char * string, char charToTest){
+
+	int i = 0;
+
+	while(string[i] != '\0'){
+
+		if(string[i] != charToTest){
+			return 0;
+		}
+		i++;
+	}
+
+	return 1;
+	
+}

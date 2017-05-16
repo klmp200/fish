@@ -37,4 +37,6 @@ char * splitWord(char * origin, int beginning_index, int size_to_delete); // Tes
 
 WordList* concatWordList(WordList* list1, WordList* list2);
 
+int stringContains(char* string, char charToTest);
+
 #endif //FISH_FISH_UTILS_H

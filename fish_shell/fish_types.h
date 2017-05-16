@@ -7,6 +7,14 @@
 
 /* Custom types */
 
+typedef enum {
+	NONE,
+	PIPE,
+	BACKGROUND_PROCESS,
+	AND,
+	OR
+} shell_operator ;
+
 typedef struct {
 	char ** words;
 	int size;

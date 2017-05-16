@@ -9,11 +9,11 @@
 #include <sys/wait.h>
 #include "fish_core.h"
 #include "fish_globbing.h"
+#include "fish_types.h"
 
 void fishLoop(Settings * settings){
 	char * line = NULL;
 	WordList* splited = NULL;
-	WordArray* array = NULL;
 	int status = 1;
 
     do {
@@ -23,11 +23,10 @@ void fishLoop(Settings * settings){
         splited = split(line, (char*) FISH_TOKENS);
 		splited = fishExpand(splited);
 
-		array = wordListToWordArray(splited);
-		status = fishExecute(array);
+		status = fishExecute(splited);
 
-		freeWordArray(array);
 		free(line);
+
 	} while(status);
 }
 
@@ -124,16 +123,16 @@ void freeSettings(Settings *settings){
 
 int fishLoad(WordArray *array) {
 	pid_t pid;
-	int status;
+	int status = 1;
 
 	pid = fork();
 	if (pid == 0){
 		/* Executes only in the child process */
 		if (execvp(array->words[0], array->words) == -1){
 			/* Error during system call */
-			perror("fish");
+			exit(EXIT_FAILURE);
 		}
-		exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	} else if (pid < 0){
 		/* Fork failed */
 		perror("fish");
@@ -144,21 +143,66 @@ int fishLoad(WordArray *array) {
 		do {
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+		if (status) fprintf(stderr, "%s\n", getInsult());
+	}
+	return status;
+}
+
+int fishExecute(WordList *list) {
+	WordList *splited = NULL;
+	shell_operator op = NONE;
+	WordArray *array = NULL;
+
+	splited = parseWordList(list, &op);
+	array = wordListToWordArray(list);
+
+	switch (op) {
+		case AND:
+			if (!loadRightCommand(array)) fishExecute(splited);
+			else freeWordList(splited);
+			break;
+		case OR:
+			loadRightCommand(array);
+			fishExecute(splited);
+			break;
+		default:
+			loadRightCommand(array);
 	}
 
 	return 1;
 }
 
-int fishExecute(WordArray *array) {
+int loadRightCommand(WordArray *array){
 	int i;
-	if (array->size < 0)
-		return 1;
-
-	for (i=0; i < getNbBuiltins(); i++){
-		if (!strcmp(array->words[0], getBuiltinCommandsStr()[i])){
+	if (array->size <= 0) return 1;
+	for (i = 0; i < getNbBuiltins(); i++) {
+		if (!strcmp(array->words[0], getBuiltinCommandsStr()[i])) {
 			return getBuiltinCommands()[i](array);
 		}
 	}
-
 	return fishLoad(array);
+}
+
+WordList * parseWordList(WordList *list, shell_operator *an_operator) {
+	char *op_str[] = {
+			(char*) "&&",
+			(char*) "||"
+	};
+	shell_operator op[] = {
+			AND,
+			OR
+	};
+	WordList *newList = NULL;
+	int max = sizeof(op_str) / sizeof(char*);
+	int i = 0;
+
+	while (i < max && newList == NULL){
+		newList = splitWordList(list, op_str[i]);
+		i++;
+	}
+
+	if (newList != NULL) *an_operator = op[i-1];
+	else *an_operator = NONE;
+
+	return newList;
 }

@@ -3,7 +3,9 @@
 //
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include "fish_core.h"
+#include "fish_types.h"
 
 /* Necessary global variables */
 char * builtinCommandsStr[] = {
@@ -35,11 +37,12 @@ int fishCd(WordArray *args) {
 			perror("fish");
 		}
 	}
-	return 1;
+	return 0;
 }
 
 int fishHelp(WordArray *args) {
 	int i;
+	args->size = args->size;
 	printf("Bartuccio Antoine, Amalvy Arthur, Yann Chevanton\n");
 	printf("Tape tes putains de noms de programmes et tes arguments de merde et tabasse ENTER !\n");
 	printf("Les commandes suivantes sont internes :\n");
@@ -47,16 +50,13 @@ int fishHelp(WordArray *args) {
 		printf("\t%s\n", builtinCommandsStr[i]);
 	}
 	printf("Et sinon pour le reste, RTFM !");
-	if (args->size > 0)
-		return 1;
-	return 1;
+	return 0;
 }
 
 int fishExit(WordArray *args) {
-	if (args->size != 1)
-		return 1;
-	else
-		return 0;
+	args->size = args->size;
+	exit(EXIT_SUCCESS);
+
 }
 
 int getNbBuiltins() {

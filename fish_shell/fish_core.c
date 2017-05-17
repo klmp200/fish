@@ -145,6 +145,7 @@ int fishLoad(WordArray *array) {
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		if (status) fprintf(stderr, "%s\n", getInsult());
 	}
+	freeWordArray(array);
 	return status;
 }
 

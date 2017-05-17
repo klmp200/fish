@@ -44,8 +44,10 @@ include_directories(
         "${source_dir}/googlemock/include"
 )
 
+
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "-Wall -Werror -pedantic -fpic -Wextra -Wshadow")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FALGS} -g")
 
 set(SOURCE_FILES fish_shell/main.c fish_shell/fish_types.h fish_shell/fish_core.h fish_shell/fish_core.c fish_shell/fish_commands.c fish_shell/fish_commands.h fish_shell/fish_globbing.c fish_shell/fish_globbing.h fish_shell/fish_utils.c fish_shell/fish_utils.h)
 add_executable(fish ${SOURCE_FILES})

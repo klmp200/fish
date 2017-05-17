@@ -30,7 +30,7 @@ char *getInsult(){
 	int picked = 0;
 	char *insults[] = {
 			(char *) "Apprend à écrire crétin !",
-			(char *) "Bolos !",
+			(char *) "Boloss !",
 			(char *) "Mois aussi je sais écrire de la merde, pourtant je le fait pas !",
 			(char *) "Oh ! Une erreur ! Comme ta vie en fait...",
 			(char *) "Nul !",
@@ -110,12 +110,11 @@ WordArray *wordListToWordArray(WordList *list) {
 		if (array->words == NULL) crash();
 
 		while (current != NULL){
-			array->words[i] = current->word;
-			current->word = NULL;
+			array->words[i] = strdup(current->word);
 			current = current->next;
 			i++;
 		}
-		array->words[i] = NULL;
+		array->words[array->size] = NULL;
 	}
 
 	freeWordList(list);
@@ -125,7 +124,7 @@ WordArray *wordListToWordArray(WordList *list) {
 
 WordList *wordArrayToWordList(WordArray *array) {
 	WordList *list = createWordList();
-	int i = 0;
+	int i;
 
 	for (i=0; i<array->size; i++)
 		addWordList(list, array->words[i]);

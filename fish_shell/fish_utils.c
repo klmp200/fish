@@ -30,7 +30,7 @@ char *getInsult(){
 	int picked = 0;
 	char *insults[] = {
 			(char *) "Apprend à écrire crétin !",
-			(char *) "Bolos !",
+			(char *) "Boloss !",
 			(char *) "Mois aussi je sais écrire de la merde, pourtant je le fait pas !",
 			(char *) "Oh ! Une erreur ! Comme ta vie en fait...",
 			(char *) "Nul !",

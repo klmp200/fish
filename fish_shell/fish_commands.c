@@ -37,12 +37,12 @@ int fishCd(WordArray *args) {
 			perror("fish");
 		}
 	}
-	return 0;
+	freeWordArray(args);
+	return EXIT_SUCCESS;
 }
 
 int fishHelp(WordArray *args) {
 	int i;
-	args->size = args->size;
 	printf("Bartuccio Antoine, Amalvy Arthur, Yann Chevanton\n");
 	printf("Tape tes putains de noms de programmes et tes arguments de merde et tabasse ENTER !\n");
 	printf("Les commandes suivantes sont internes :\n");
@@ -50,11 +50,12 @@ int fishHelp(WordArray *args) {
 		printf("\t%s\n", builtinCommandsStr[i]);
 	}
 	printf("Et sinon pour le reste, RTFM !");
-	return 0;
+	freeWordArray(args);
+	return EXIT_SUCCESS;
 }
 
 int fishExit(WordArray *args) {
-	args->size = args->size;
+	freeWordArray(args);
 	return EXIT_SIGNAL;
 
 }

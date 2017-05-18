@@ -14,7 +14,8 @@ typedef enum {
 	PIPE,
 	BACKGROUND_PROCESS,
 	AND,
-	OR
+	OR,
+	REVERSE_AND
 } shell_operator ;
 
 typedef struct {

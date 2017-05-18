@@ -171,6 +171,12 @@ int fishExecute(WordList *list) {
 				if (splited != NULL) freeWordList(splited);
 			}
 			break;
+		case REVERSE_AND:
+			if (signal) signal = fishExecute(splited);
+			else {
+				if (splited != NULL) freeWordList(splited);
+			}
+			break;
 		case OR:
 			signal = fishExecute(splited);
 			break;
@@ -194,11 +200,13 @@ int loadRightCommand(WordArray *array){
 
 WordList * parseWordList(WordList *list, shell_operator *an_operator) {
 	char *op_str[] = {
+			(char*) ";",
 			(char*) "||",
 			(char*) "&&"
 	};
 	shell_operator op[] = {
 			OR,
+			REVERSE_AND,
 			AND
 	};
 	WordList *newList = NULL;

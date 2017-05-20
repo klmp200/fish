@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <pcre.h>
 #include "fish_utils.h"
 #include "fish_types.h"
 
@@ -70,20 +71,38 @@ WordList *createWordList() {
 	return list;
 }
 
-void addWordList(WordList *list, char *word) {
-	WordListElement *newElement = (WordListElement*) malloc(sizeof(WordListElement));
-	if (newElement == NULL) crash();
+void addEndWordList(WordList *list, char *word) {
+	WordListElement *new_element = (WordListElement*) malloc(sizeof(WordListElement));
+	if (new_element == NULL) crash();
 	else {
-		newElement->next = NULL;
-		newElement->previous = list->last;
+		new_element->next = NULL;
+		new_element->previous = list->last;
 		if (list->size == 0){
-			list->first = newElement;
-			list->last = newElement;
+			list->first = new_element;
+			list->last = new_element;
 		} else {
-			list->last->next = newElement;
-			list->last = newElement;
+			list->last->next = new_element;
+			list->last = new_element;
 		}
-		newElement->word = strdup(word);
+		new_element->word = strdup(word);
+		list->size++;
+	}
+}
+
+void addBeginWordList(WordList *list, char *word) {
+	WordListElement *new_element = (WordListElement*) malloc(sizeof(WordListElement));
+	if (new_element == NULL) crash();
+	else {
+		new_element->next = list->first;
+		new_element->previous = NULL;
+		if (list->size == 0){
+			list->first = new_element;
+			list->last = new_element;
+		} else {
+			list->first->previous = new_element;
+			list->first = new_element;
+		}
+		new_element->word = strdup(word);
 		list->size++;
 	}
 }
@@ -127,7 +146,7 @@ WordList *wordArrayToWordList(WordArray *array) {
 	int i;
 
 	for (i=0; i<array->size; i++)
-		addWordList(list, array->words[i]);
+		addEndWordList(list, array->words[i]);
 
 	freeWordArray(array);
 
@@ -176,7 +195,7 @@ WordList *sliceWordList(WordList *list, int min_index, int max_index) {
 
 			tmp = elem->next;
 			if (i >= min_index){
-				addWordList(newList, elem->word);
+				addEndWordList(newList, elem->word);
 				removeWordListElem(list, elem);
 			}
 
@@ -188,21 +207,59 @@ WordList *sliceWordList(WordList *list, int min_index, int max_index) {
 	return newList;
 }
 
-WordList *splitWordList(WordList *list, char *token) {
-	WordList * newList = NULL;
-	WordListElement * current = list->first;
+char * splitWord(char * origin, int beginning_index, int size_to_delete){
+	char * new_word = strdup(origin + beginning_index + size_to_delete);
+
+	if (new_word == NULL) crash();
+	else {
+		origin[beginning_index] = '\0';
+	}
+
+	return new_word;
+}
+
+WordList *splitWordList(WordList *list, char *regex) {
+	const char* error;
+	int error_offset;
+	int ovector[100];
 	int i = 0;
+	int rc;
+	WordList * new_list = NULL;
+	WordListElement * current = list->first;
+	pcre *re = pcre_compile(regex, 0, &error, &error_offset, 0);
+	char *tmp_word = NULL;
+
+	if (!re) crash();
 
 	while (current != NULL){
-		if (!strcmp(current->word, token)){
-			newList = sliceWordList(list, i + 1, list->size);
+		rc = pcre_exec(re,
+					   0,
+					   current->word,
+					   (int) strlen(current->word),
+					   0,
+					   0,
+					   ovector,
+					   sizeof(ovector)
+		);
+
+		if(rc >= 0){
+			new_list = sliceWordList(list, i + 1, list->size);
+			tmp_word = splitWord(current->word, ovector[0], ovector[1] - ovector[0]);
+
+			if (tmp_word[0] != '\0') addBeginWordList(new_list, tmp_word);
+			if (current->word[0] != '\0') addEndWordList(list, current->word);
+
 			removeWordListElem(list, current);
 			current = NULL;
+			free(tmp_word);
 		}
+
 		else current = current->next;
 		i++;
 	}
 
-	return newList;
+	pcre_free(re);
+
+	return new_list;
 }
 

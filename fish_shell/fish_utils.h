@@ -17,7 +17,9 @@ WordList * createWordList(); // Tested
 
 WordList * sliceWordList(WordList *list, int min_index, int max_index);
 
-void addWordList(WordList *list, char *word); // Tested
+void addEndWordList(WordList *list, char *word); // Tested
+
+void addBeginWordList(WordList *list, char *word);
 
 void removeWordList(WordList *list); // Tested
 
@@ -29,6 +31,8 @@ WordArray * wordListToWordArray(WordList *list); // Tested
 
 WordList * wordArrayToWordList(WordArray * array); // Tested
 
-WordList * splitWordList(WordList *list, char * tokens);
+WordList * splitWordList(WordList *list, char *regex);
+
+char * splitWord(char * origin, int beginning_index, int size_to_delete); // Tested
 
 #endif //FISH_FISH_UTILS_H

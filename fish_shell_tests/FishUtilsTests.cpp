@@ -6,15 +6,15 @@
 #include "../fish_shell/fish_utils.h"
 #include "../fish_shell/fish_types.h"
 
-TEST(crash_test, crash){
+TEST(crash_crash_Test, crash){
 	ASSERT_DEATH(crash(), "[A-z]+");
 }
 
-TEST(get_an_insult, getInsult){
+TEST(get_getInsult_Test, getInsult){
 	ASSERT_EQ(typeid(char*), typeid(getInsult()));
 }
 
-TEST(word_list_init, createWordList){
+TEST(create_createWordList_Test, createWordList){
 	WordList *list = createWordList();
 	ASSERT_FALSE(list == NULL);
 	ASSERT_TRUE(list->first == NULL);
@@ -22,13 +22,46 @@ TEST(word_list_init, createWordList){
 	ASSERT_TRUE(list->size == 0);
 }
 
-TEST(word_list_add, addWordList){
+TEST(add_addBegin__Test, addBeginWordList){
 	WordList *list = createWordList();
 	char test1[] = "Test1";
 	char test2[] = "Test2";
 	char test3[] = "Test3";
 
-	addWordList(list, test1);
+	addBeginWordList(list, test1);
+	ASSERT_EQ(list->size, 1);
+	ASSERT_FALSE(list->first == NULL);
+	ASSERT_FALSE(list->last == NULL);
+	ASSERT_EQ(list->first, list->last);
+	ASSERT_FALSE(list->first->word == NULL);
+	ASSERT_STREQ(list->first->word, test1);
+	ASSERT_FALSE(list->first->word == test1);
+
+	addBeginWordList(list, test2);
+	ASSERT_EQ(list->size, 2);
+	ASSERT_FALSE(list->first == list->last);
+	ASSERT_STREQ(list->first->word, test2);
+	ASSERT_STREQ(list->last->word, test1);
+	ASSERT_STRNE(list->first->word, test1);
+
+	addBeginWordList(list, test3);
+	ASSERT_EQ(list->size, 3);
+	ASSERT_FALSE(list->first == list->last);
+	ASSERT_STREQ(list->last->word, test1);
+	ASSERT_STREQ(list->first->next->word, test2);
+	ASSERT_STREQ(list->first->word, test3);
+
+	freeWordList(list);
+
+}
+
+TEST(add_addEndWordList_Test, addEndWordList){
+	WordList *list = createWordList();
+	char test1[] = "Test1";
+	char test2[] = "Test2";
+	char test3[] = "Test3";
+
+	addEndWordList(list, test1);
 	ASSERT_TRUE(list->size == 1);
 	ASSERT_TRUE(list->first != NULL);
 	ASSERT_TRUE(list->last != NULL);
@@ -37,14 +70,14 @@ TEST(word_list_add, addWordList){
 	ASSERT_FALSE(strcmp(list->first->word, test1));
 	ASSERT_FALSE(list->first->word == test1);
 
-	addWordList(list, test2);
+	addEndWordList(list, test2);
 	ASSERT_TRUE(list->size == 2);
 	ASSERT_TRUE(list->first != list->last);
 	ASSERT_FALSE(strcmp(list->last->word, test2));
 	ASSERT_FALSE(strcmp(list->first->word, test1));
 	ASSERT_TRUE(strcmp(list->first->word, test2));
 
-	addWordList(list, test3);
+	addEndWordList(list, test3);
 	ASSERT_TRUE(list->size == 3);
 	ASSERT_TRUE(list->first != list->last);
 	ASSERT_FALSE(strcmp(list->first->word, test1));
@@ -54,13 +87,13 @@ TEST(word_list_add, addWordList){
 	freeWordList(list);
 }
 
-TEST(word_list_remove, removeWordList){
+TEST(remove_removeWordList_Test, removeWordList){
 	WordList *list = createWordList();
 	char word[] = "lel";
 
-	addWordList(list, word);
-	addWordList(list, word);
-	addWordList(list, word);
+	addEndWordList(list, word);
+	addEndWordList(list, word);
+	addEndWordList(list, word);
 
 	ASSERT_TRUE(list->size == 3);
 
@@ -76,12 +109,12 @@ TEST(word_list_remove, removeWordList){
 
 }
 
-TEST(word_list_free, freeWordList){
+TEST(free_freeWordList_Test, freeWordList){
 	WordList *list = createWordList();
 	char word[] = "lel";
-	addWordList(list, word);
-	addWordList(list, word);
-	addWordList(list, word);
+	addEndWordList(list, word);
+	addEndWordList(list, word);
+	addEndWordList(list, word);
 
 	freeWordList(list);
 
@@ -90,7 +123,7 @@ TEST(word_list_free, freeWordList){
 	freeWordList(list);
 }
 
-TEST(word_list_to_word_array, wordListToWordArray){
+TEST(word_wordListToWordArray_Test, wordListToWordArray){
 	WordList *list = createWordList();
 	WordListElement *elem = NULL;
 	WordArray *array = NULL;
@@ -100,28 +133,28 @@ TEST(word_list_to_word_array, wordListToWordArray){
 	char test2[] = "Test2";
 	char test3[] = "Test3";
 
-	addWordList(list, test1);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test2);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test1);
-	addWordList(list, test1);
+	addEndWordList(list, test1);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test2);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test1);
+	addEndWordList(list, test1);
 
 	array = wordListToWordArray(list);
 	ASSERT_FALSE(array == NULL);
 	ASSERT_FALSE(array->words == NULL);
 
 	list = createWordList();
-	addWordList(list, test1);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test2);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test1);
-	addWordList(list, test1);
+	addEndWordList(list, test1);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test2);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test1);
+	addEndWordList(list, test1);
 
 	ASSERT_EQ(list->size, array->size);
 
@@ -138,7 +171,7 @@ TEST(word_list_to_word_array, wordListToWordArray){
 	freeWordArray(array);
 }
 
-TEST(word_array_to_word_list, wordArrayToWordList){
+TEST(word_wordArrayToWordList_Test, wordArrayToWordList){
 	WordList *list = createWordList();
 	WordList *list2 = NULL;
 	WordListElement *elem = NULL;
@@ -149,27 +182,27 @@ TEST(word_array_to_word_list, wordArrayToWordList){
 	char test2[] = "Test2";
 	char test3[] = "Test3";
 
-	addWordList(list, test1);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test2);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test1);
-	addWordList(list, test1);
+	addEndWordList(list, test1);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test2);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test1);
+	addEndWordList(list, test1);
 
 	array = wordListToWordArray(list);
 	list2 = wordArrayToWordList(array);
 
 	list = createWordList();
-	addWordList(list, test1);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test2);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test1);
-	addWordList(list, test1);
+	addEndWordList(list, test1);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test2);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test1);
+	addEndWordList(list, test1);
 	array = wordListToWordArray(list);
 
 	ASSERT_TRUE(list2 != NULL);
@@ -187,7 +220,7 @@ TEST(word_array_to_word_list, wordArrayToWordList){
 
 }
 
-TEST(word_array_free, freeWordArray){
+TEST(free_freeWordArray_Test, freeWordArray){
 	WordList *list = createWordList();
 	WordArray *array = NULL;
 
@@ -195,16 +228,34 @@ TEST(word_array_free, freeWordArray){
 	char test2[] = "Test2";
 	char test3[] = "Test3";
 
-	addWordList(list, test1);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test2);
-	addWordList(list, test2);
-	addWordList(list, test3);
-	addWordList(list, test1);
-	addWordList(list, test1);
+	addEndWordList(list, test1);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test2);
+	addEndWordList(list, test2);
+	addEndWordList(list, test3);
+	addEndWordList(list, test1);
+	addEndWordList(list, test1);
 
 	array = wordListToWordArray(list);
 
 	freeWordArray(array);
+}
+
+TEST(split_splitWord__Test, slpitWord){
+	char test1[] = "ls&&ls";
+	char test2[] = "&&";
+	char *splited = splitWord(test1, 2, 2);
+
+	ASSERT_STREQ(test1, "ls");
+	ASSERT_STREQ(splited, "ls");
+
+	free(splited);
+
+	splited = splitWord(test2, 0, 2);
+
+	ASSERT_STREQ(test2, "");
+	ASSERT_STREQ(splited, "");
+
+	free(splited);
 }

@@ -9,13 +9,14 @@
 
 /* Necessary global variables */
 char * builtinCommandsStr[] = {
+		(char *) "kek",
 		(char *) "cd",
 		(char *) "help",
 		(char *) "exit"
 };
 
-
 builtinCommand *builtinCommands[] = {
+		&fishKek,
 		&fishCd,
 		&fishHelp,
 		&fishExit
@@ -58,6 +59,12 @@ int fishExit(WordArray *args) {
 	args->size = args->size;
 	return EXIT_SIGNAL;
 
+}
+
+int fishKek(WordArray *args) {
+	freeWordArray(args);
+	printf("Praise kek !");
+	return EXIT_SUCCESS;
 }
 
 int getNbBuiltins() {

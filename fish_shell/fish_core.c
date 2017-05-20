@@ -58,7 +58,7 @@ WordList * split(char *string, char *separator){
 	}
 
 	while((token = strsep(&to_delete, separator)) != NULL)
-		addWordList(list, token);
+		addEndWordList(list, token);
 
 	free(to_delete_bak);
 
@@ -201,7 +201,7 @@ int loadRightCommand(WordArray *array){
 WordList * parseWordList(WordList *list, shell_operator *an_operator) {
 	char *op_str[] = {
 			(char*) ";",
-			(char*) "||",
+			(char*) "\\|\\|",
 			(char*) "&&"
 	};
 	shell_operator op[] = {

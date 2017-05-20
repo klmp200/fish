@@ -21,4 +21,6 @@ int fishHelp(WordArray * args);
 
 int fishExit(WordArray * args);
 
+int fishKek(WordArray *args);
+
 #endif //FISH_FISH_COMMANDS_H

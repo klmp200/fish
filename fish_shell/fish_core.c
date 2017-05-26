@@ -156,33 +156,38 @@ int fishExecute(WordList *list) {
 	int signal = 1;
 
 	splited = parseWordList(list, &op);
-	array = wordListToWordArray(list);
-
-	signal = loadRightCommand(array);
-	if (signal == EXIT_SIGNAL){
-		if (splited != NULL) freeWordList(splited);
-		if (array != NULL) freeWordArray(array);
-		return signal;
-	}
 	switch (op) {
 		case AND:
+			signal = fishExecute(list);
 			if (!signal) signal = fishExecute(splited);
 			else {
 				if (splited != NULL) freeWordList(splited);
+				splited = NULL;
 			}
 			break;
 		case REVERSE_AND:
-			if (signal) signal = fishExecute(splited);
+			signal = fishExecute(list);
+			if (signal && signal != EXIT_SIGNAL) signal = fishExecute(splited);
 			else {
 				if (splited != NULL) freeWordList(splited);
+				splited = NULL;
 			}
 			break;
 		case OR:
-			signal = fishExecute(splited);
+			signal = fishExecute(list);
+			if (signal != EXIT_SIGNAL) signal = fishExecute(splited);
 			break;
 		default:
-			break;
+			array = wordListToWordArray(list);
+			signal = loadRightCommand(array);
+			splited = NULL;
 	}
+
+	if (signal == EXIT_SIGNAL){
+		if (splited != NULL) freeWordList(splited);
+		if (array != NULL) freeWordArray(array);
+	}
+
 	return signal;
 
 }

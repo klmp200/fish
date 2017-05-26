@@ -33,9 +33,11 @@ builtinCommand **getBuiltinCommands(){
 int fishCd(WordArray *args) {
 	if (args->size < 2){
 		fprintf(stderr, "fish: Où sont les arguments de ta commande \"cd\" connard ?!\n");
+		return EXIT_FAILURE;
 	} else {
 		if (chdir(args->words[1]) != 0){
 			perror("fish");
+			return EXIT_FAILURE;
 		}
 	}
 	freeWordArray(args);

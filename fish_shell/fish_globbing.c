@@ -9,51 +9,56 @@
 WordList * fishExpand(WordList *wordList) {
 
 	if(wordList->size > 1){
+
 		int i;
+		WordList* newWordList = createWordList();// creating the list to return
 
-		WordList* newWordList = createWordList();
-
-		if(newWordList == NULL){
+		if(newWordList == NULL){//crash when the allocation is unsuccessful
 			crash();
-		}
+    }
 
-		newWordList->first = wordList->first;
+    addEndWordList(newWordList, wordList->first->word);//copy the command into the returning word list
 
-		newWordList->size = 0;
 
-		WordListElement* tempElement = wordList->first->next;
+		WordListElement* tempElement = wordList->first->next; //temporary nav element
 
-		for(i=0; i<wordList->size; i++){
+		for(i=1; i<wordList->size; i++){
 
-			//newWordList = concatWordList(newWordList, recursiveExpand(tempElement->word));
-			//newWordList = concatWordList(newWordList, NULL);
+      //TODO : optimize the stringContains() function to test for a list of characters
+      //test if we have to expand a string or not, for optimization purposes
+      if(stringContains(tempElement->word, '*') || stringContains(tempElement->word, '?')){
 
-			if(tempElement != NULL){
+        concatWordList(newWordList, expandWord(tempElement->word));
 
-				tempElement = tempElement->next;
+      }
+      //If we dont have to expand, add the current word unchanged to the new list
+      else{
+        addEndWordList(newWordList, tempElement->word);
+      }
 
-			}
-		}
+			tempElement = tempElement->next;
 
+    }
+
+    freeWordList(wordList);
 		return newWordList;
-	
+
 	}
 
 	else return wordList;
+
+
+}
+
+WordList* expandWord(char* word){
+
+  WordList* wordList = createWordList();
+  addEndWordList(wordList, word);
+  return wordList;
+
 }
 
 
-WordList* recursiveExpand(char * completePath){
-
-	if (stringContains(completePath, '/')){
-
-		return expandInDir("./",completePath);
-
-	}
-
-	return NULL;
-
-}
 
 
 WordArray * getFiles(char* path){
@@ -99,88 +104,4 @@ WordArray * getFiles(char* path){
 	return files;
 
 }
-
-int comparator(char* string1, char* string2){//TODO
-
-	int i = 0;
-	char tempIChar;
-	int j = 0;
-
-	if(string1 != NULL && string2 != NULL){
-
-		while(string1[i] != '\0' && string2[j] != '\0'){
-
-			if(string1[i] == '*'){
-
-				tempIChar = string1[i+1];
-
-				while(string2[j] != tempIChar){
-
-					j++;
-
-					if(string2[j] == '\0' && tempIChar == '\0'){
-						return 1;
-					}
-
-				}
-				i++;
-
-			}
-
-			if(string1[i] != string2[j] && string1[i] != '?'){
-
-				return 0;
-
-			}
-
-			i++;
-			j++;
-
-		}
-
-		if(string1[i] == '\0' && string2[j] == '\0'){
-
-			return 1;
-
-		}
-		else{
-
-			return 0;
-
-		}
-
-
-	}
-
-	else{
-
-		printf("warning : fuck you, strings are considered null");
-		crash();
-		return 0;
-
-	}
-
-}
-
-WordList* expandInDir(char* dir, char* toExpand){
-
-	int i = 0;
-	WordList* list = createWordList();
-	WordArray* files = getFiles(dir);
-
-	for(i=0; i<files->size;i++){
-
-		if(comparator(toExpand, files->words[i])){
-
-			addWordList(list, files->words[i]);
-
-		}
-
-	}
-
-
-	return list;
-
-}
-
 

@@ -35,11 +35,9 @@ WordList * splitWordList(WordList *list, char *regex);
 
 char * splitWord(char * origin, int beginning_index, int size_to_delete); // Tested
 
-WordList* concatWordList(WordList* list1, WordList* list2);
+void concatWordList(WordList* list1, WordList* list2);
 
 int stringContains(char* string, char charToTest);
-
-WordList* concatWordList(WordList* list1, WordList* list2);
 
 int stringContains(char* string, char charToTest);
 

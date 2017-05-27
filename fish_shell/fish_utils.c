@@ -117,20 +117,28 @@ void freeWordList(WordList *list) {
 	free(list);
 }
 
-WordList* concatWordList(WordList* list1, WordList* list2){
+void concatWordList(WordList* list1, WordList* list2){//return a sing list containing all elements of both lists
 
+  if(list1 == NULL || list2 == NULL){
+    crash();
+  }
+  else if(list2->size != 0){
 
-	if(list1 != NULL && list2 != NULL && list1->size >= 1 && list2->size >=1){
-		list1->last->next = list2->first;
-		list2->first->previous = list1->last;
-		list1->last = list2->last;
-		list1->size = list1->size + list2->size;
-		free(list2);
-		return list1;
-	}
-	else{
-		return NULL;
-	}
+    WordListElement* tempElement = list2->first;
+
+    for(int i = 0; i < list2->size; i++){
+
+      addEndWordList(list1, tempElement->word);
+      tempElement = tempElement->next;
+
+    }
+
+    freeWordList(list2);
+
+  }
+  else{
+    freeWordList(list2);
+  }
 
 }
 
@@ -286,12 +294,12 @@ int stringContains(char * string, char charToTest){
 
 	while(string[i] != '\0'){
 
-		if(string[i] != charToTest){
-			return 0;
+		if(string[i] == charToTest){
+			return 1;
 		}
 		i++;
 	}
 
-	return 1;
+	return 0;
 	
 }

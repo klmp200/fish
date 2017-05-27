@@ -39,4 +39,8 @@ WordList* concatWordList(WordList* list1, WordList* list2);
 
 int stringContains(char* string, char charToTest);
 
+WordList* concatWordList(WordList* list1, WordList* list2);
+
+int stringContains(char* string, char charToTest);
+
 #endif //FISH_FISH_UTILS_H

@@ -117,7 +117,7 @@ void freeWordList(WordList *list) {
 	free(list);
 }
 
-void concatWordList(WordList* list1, WordList* list2){//return a sing list containing all elements of both lists
+void concatWordList(WordList* list1, WordList* list2){//return a single list containing all elements of both lists
 
   if(list1 == NULL || list2 == NULL){
     crash();

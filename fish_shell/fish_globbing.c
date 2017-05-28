@@ -1,4 +1,4 @@
-// Created by Aethor
+// Created by Arthur Amalvy
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -8,7 +8,7 @@
 
 WordList * fishExpand(WordList *wordList) {
 
-	if(wordList->size > 1){
+	/*if(wordList->size > 1){
 
 		int i;
 		WordList* newWordList = createWordList();// creating the list to return
@@ -45,7 +45,8 @@ WordList * fishExpand(WordList *wordList) {
 
 	}
 
-	else return wordList;
+	else return wordList;*/
+  return wordList;
 
 
 }
@@ -61,14 +62,14 @@ WordList* expandWord(char* word){
 
 
 
-WordArray * getFiles(char* path){
+WordList* getFiles(char* path){
 
 	DIR* directory;
 	dirent* dir;
 	int i = 0;
 
 
-	WordArray* files = (WordArray*) malloc(sizeof(WordArray));
+	WordList* files = createWordList();
 
 
 	if((directory = opendir(path)) != NULL){
@@ -79,8 +80,6 @@ WordArray * getFiles(char* path){
 
 		}
 
-		files->words = (char **) malloc(sizeof(char*) * (i + 1));
-
 		closedir(directory);
 		directory = opendir(path);
 		i = 0;
@@ -89,13 +88,13 @@ WordArray * getFiles(char* path){
 
 			if(!strcmp(dir->d_name, ".") && !strcmp(dir->d_name, "..")){
 
-				printf("%s\n", dir->d_name);
-				files->words[i] = dir->d_name;
+				printf("%s\n", dir->d_name);//test
+        addEndWordList(files, dir->d_name);
 				i++;
 				files->size++;
 
 			}
-			
+
 		}
 
 

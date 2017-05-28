@@ -6,7 +6,7 @@ typedef struct dirent dirent;
 
 WordList * fishExpand(WordList *wordArray);
 
-WordArray* getFiles(char* path);
+WordList* getFiles(char* path);
 
 WordList* expandWord(char* word);
 

@@ -59,7 +59,7 @@ WordList* expandWord(char* word){
 
   else{
 
-    return getFiles(word, "*");//temporary
+    return getFiles(word, (char*) "*");//temporary
     //return();
 
   }

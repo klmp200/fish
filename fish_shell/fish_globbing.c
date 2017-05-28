@@ -51,19 +51,26 @@ WordList * fishExpand(WordList *wordList) {
 
 WordList* expandWord(char* word){
 
-  printf("\n%s\n", word);
+  if(!stringContains(word, '/')){
 
-  WordList* testList = getFiles((char*) "../");
+    return getFiles((char*) "./", word);
 
-  printWordList(testList);
-  return testList;
+  }
+
+  else{
+
+    return getFiles(word, "*");//temporary
+    //return();
+
+  }
+
 
 }
 
 
 
 
-WordList* getFiles(char* path){
+WordList* getFiles(char* path, char* wildcardedString){
 
 	DIR* directory;
 	dirent* dir;
@@ -75,10 +82,16 @@ WordList* getFiles(char* path){
 
 		while((dir = readdir(directory)) != NULL){
 
-			if(strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..")){//sorry strcmp but I dont like you :(
+			if(strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..") && wildcardedStringMatches(wildcardedString, dir->d_name)){//sorry strcmp but I dont like you :(
 
-				printf("%s\n", dir->d_name);//test
-        addEndWordList(files, dir->d_name);
+        //dont read this, and if you do, do not complain, it's strcat's fault. you've been warned.
+        char* filePath = (char*) malloc(sizeof(char) * (strlen(path) + strlen(dir->d_name)) + 1);
+        if(filePath == NULL) crash();
+        filePath[0] = '\0';
+        strcat(filePath, path);
+        strcat(filePath, dir->d_name);
+        addEndWordList(files, filePath);
+        free(filePath);
 
 			}
 
@@ -92,4 +105,68 @@ WordList* getFiles(char* path){
 	return files;
 
 }
+
+
+int wildcardedStringMatches(char* string1, char* string2){//TODO
+
+	int i = 0;
+	char tempIChar;
+	int j = 0;
+
+	if(string1 != NULL && string2 != NULL){
+
+		while(string1[i] != '\0' && string2[j] != '\0'){
+
+			if(string1[i] == '*'){
+
+				tempIChar = string1[i+1];
+
+				while(string2[j] != tempIChar){
+
+					j++;
+
+					if(string2[j] == '\0' && tempIChar == '\0'){
+						return 1;
+					}
+
+				}
+
+				i++;
+
+			}
+
+			if(string1[i] != string2[j] && string1[i] != '?'){
+
+				return 0;
+
+			}
+
+			i++;
+			j++;
+
+		}
+
+		if(string1[i] == '\0' && string2[j] == '\0'){
+
+			return 1;
+
+		}
+		else{
+
+			return 0;
+
+		}
+
+	}
+
+	else{
+
+		printf("warning : fuck you, strings are considered null");
+		crash();
+		return 0;
+
+	}
+
+}
+
 

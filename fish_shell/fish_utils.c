@@ -311,7 +311,7 @@ void printWordList(WordList* list){
 
   }
   else{
-    printf("fish : Warning : list is null. Are you stupid ?");
+    fprintf(stderr, "fish : Warning : list is null. Are you stupid ?\n");
   }
 
 }

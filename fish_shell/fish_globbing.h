@@ -4,10 +4,12 @@
 typedef struct dirent dirent;
 
 
-WordList * fishExpand(WordList *wordArray);
+WordList* fishExpand(WordList* wordArray);
 
-WordList* getFiles(char* path);
+WordList* getFiles(char* path, char* wildcardedString);
 
 WordList* expandWord(char* word);
+
+int wildcardedStringMatches(char* string1, char* string2);
 
 #endif //FISH_FISH_GLOBBING_H

@@ -288,6 +288,34 @@ WordList *splitWordList(WordList *list, char *regex) {
 	return new_list;
 }
 
+//for debugging purposes
+void printWordList(WordList* list){
+
+
+  if(list != NULL){
+
+    printf("--- list ---\n");
+    printf("size : %i\n", list->size);
+
+    int i = 0;
+    WordListElement* tempElement = list->first;
+
+    for(i=0; i<list->size; i++){
+
+      printf("element %i : %s\n",i, tempElement->word);
+      tempElement = tempElement->next;
+
+    }
+
+    printf("--- end ---\n");
+
+  }
+  else{
+    printf("fish : Warning : list is null. Are you stupid ?");
+  }
+
+}
+
 int stringContains(char * string, char charToTest){
 
 	int i = 0;
@@ -301,5 +329,6 @@ int stringContains(char * string, char charToTest){
 	}
 
 	return 0;
-	
+
 }
+

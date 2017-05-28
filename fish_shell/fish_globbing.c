@@ -8,7 +8,7 @@
 
 WordList * fishExpand(WordList *wordList) {
 
-	/*if(wordList->size > 1){
+	if(wordList->size > 1){
 
 		int i;
 		WordList* newWordList = createWordList();// creating the list to return
@@ -45,17 +45,18 @@ WordList * fishExpand(WordList *wordList) {
 
 	}
 
-	else return wordList;*/
-  return wordList;
-
+  else return wordList;
 
 }
 
 WordList* expandWord(char* word){
 
-  WordList* wordList = createWordList();
-  addEndWordList(wordList, word);
-  return wordList;
+  printf("\n%s\n", word);
+
+  WordList* testList = getFiles((char*) "../");
+
+  printWordList(testList);
+  return testList;
 
 }
 
@@ -66,8 +67,6 @@ WordList* getFiles(char* path){
 
 	DIR* directory;
 	dirent* dir;
-	int i = 0;
-
 
 	WordList* files = createWordList();
 
@@ -76,26 +75,16 @@ WordList* getFiles(char* path){
 
 		while((dir = readdir(directory)) != NULL){
 
-			i++;
-
-		}
-
-		closedir(directory);
-		directory = opendir(path);
-		i = 0;
-
-		while((dir = readdir(directory)) != NULL){
-
-			if(!strcmp(dir->d_name, ".") && !strcmp(dir->d_name, "..")){
+			if(strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..")){//sorry strcmp but I dont like you :(
 
 				printf("%s\n", dir->d_name);//test
         addEndWordList(files, dir->d_name);
-				i++;
-				files->size++;
 
 			}
 
 		}
+
+    closedir(directory); //YY U LEAK MEMORY ? NOT ON MY WATCH
 
 
 	}

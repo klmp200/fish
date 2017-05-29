@@ -103,23 +103,6 @@ char *fishReadLine() {
 	return NULL;
 }
 
-Settings *getSettings() {
-	Settings *s = (Settings*) malloc(sizeof(Settings));
-	if (s == NULL){
-		crash();
-	} else {
-		s->PS1 = strdup("\n~>");
-	}
-
-	return s;
-}
-
-void freeSettings(Settings *settings){
-	if (settings != NULL){
-		free(settings->PS1);
-		free(settings);
-	}
-}
 
 int fishLoad(WordArray *array) {
 	pid_t pid;

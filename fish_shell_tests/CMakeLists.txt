@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.5)
 project(fish_shell_tests)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -11,9 +11,9 @@ include_directories(
         "${source_dir}/googlemock/include"
 )
 
-set(SOURCE_FILES_TESTS main.cpp FishCoreTests.cpp FishUtilsTests.cpp)
+set(SOURCE_FILES_TESTS main.cpp FishCoreTests.cpp FishUtilsTests.cpp FishSettingsTests.cpp )
 
 add_executable(fish_tests ${SOURCE_FILES_TESTS})
 
-target_link_libraries(fish_tests libgtest libgmock)
+target_link_libraries(fish_tests libgtest libgmock pcre)
 

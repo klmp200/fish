@@ -5,6 +5,10 @@
 #ifndef FISH_FISH_TYPES_H
 #define FISH_FISH_TYPES_H
 
+#include <sys/types.h>
+#include <unistd.h>
+#include <pwd.h>
+
 #define EXIT_SIGNAL -100
 #define ERROR_STRING "\n"
 
@@ -39,6 +43,8 @@ typedef struct {
 
 typedef struct {
 	char *PS1;
+	char *PS2;
+	struct passwd* passwd;
 } Settings;
 
 

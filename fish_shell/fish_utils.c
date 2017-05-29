@@ -331,3 +331,15 @@ int stringContains(char * string, char charToTest){
 	return 0;
 
 }
+
+//dont read this, and if you do, do not complain, it's strcat's fault. you've been warned.
+char* trueStrcat(char* string1, char* string2){
+
+  char* newString = (char*) malloc(sizeof(char) * (strlen(string1) + strlen(string2)) + 1);
+  if(newString == NULL) crash();
+  newString[0] = '\0';
+  strcat(newString, string1);
+  strcat(newString, string2);
+  return newString;
+
+}

@@ -64,19 +64,79 @@ WordList* expandWord(char* word){
 
   else{
 
-    WordList* testList = splitWordIntoList(word, '/');
-    printWordList(testList);
-    freeWordList(testList);
+    WordList* pathList = splitWordIntoList(word, '/');
+    WordList* expandedArgsList = createWordList();
+    if (expandedArgsList == NULL) crash();
+    WordListElement* tempElement;
+    int i;
 
-    return getFiles(word, (char*) "*");//temporary
-    //return();
+    if(pathList->size >= 1){
+      tempElement = pathList->first;
+      for(i=0; i < pathList->size; i++){
+
+        printf("\nBASE PATH %s\n", tempElement->word);
+        char* tempPath = getPath(tempElement->word);
+        printf("\nPATH : %s\n", tempPath);
+        char* tempFileName = getFileName(tempElement->word);
+        printf("\nFILENAME : %s\n", tempFileName);
+
+        concatWordList(expandedArgsList, getFiles(tempPath, tempFileName));
+        printWordList(expandedArgsList);
+        tempElement = tempElement->next;
+
+        free(tempPath);
+        free(tempFileName);
+
+      }
+    }
+
+    freeWordList(pathList);
+
+    return expandedArgsList;
+    //return getFiles(word, (char*) "*");//temporary
 
   }
 
 
 }
 
+char* getFileName(char* string){
 
+  if(!stringContains(string, '/')){
+    return string;
+  }
+  else{
+    int i = 0;
+    while(string[i] != '/'){
+      i++;
+    }
+
+    return strndup(string + i + 1, strlen(string) - i);
+  }
+}
+
+
+//get path of a file
+char* getPath(char* string){
+
+  if(!stringContains(string, '/')){
+    return string;
+  }
+  else{
+
+    int i = strlen(string) - 1;
+
+    while(i != -1 && string[i] != '/'){
+
+      i = i-1;
+
+    }
+
+    return strndup(string, i + 1);
+
+  }
+
+}
 
 
 WordList* getFiles(char* path, char* wildcardedString){
@@ -85,6 +145,7 @@ WordList* getFiles(char* path, char* wildcardedString){
 	dirent* dir;
 
 	WordList* files = createWordList();
+  if(files == NULL) crash();
 
 
 	if((directory = opendir(path)) != NULL){
@@ -93,12 +154,7 @@ WordList* getFiles(char* path, char* wildcardedString){
 
 			if(strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..") && wildcardedStringMatches(wildcardedString, dir->d_name)){//sorry strcmp but I dont like you :(
 
-        //dont read this, and if you do, do not complain, it's strcat's fault. you've been warned.
-        char* filePath = (char*) malloc(sizeof(char) * (strlen(path) + strlen(dir->d_name)) + 1);
-        if(filePath == NULL) crash();
-        filePath[0] = '\0';
-        strcat(filePath, path);
-        strcat(filePath, dir->d_name);
+        char* filePath = trueStrcat(path, dir->d_name);
         addEndWordList(files, filePath);
         free(filePath);
 
@@ -185,9 +241,10 @@ WordList* splitWordIntoList(char* string, char splitChar){
 
     int i = 0;
     int mark = 0;
-    int finished = 0;
-    int firstEncounter = 0;
+    int finished = 0; //boolean
+    int firstEncounter = 0; //boolean
     WordList* newWordList = createWordList();
+    if(newWordList == NULL) crash();
 
     while(!finished){
 

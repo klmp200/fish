@@ -41,5 +41,7 @@ void printWordList(WordList* list);
 
 int stringContains(char* string, char charToTest);
 
+char* trueStrcat(char* string1, char* string2);
+
 
 #endif //FISH_FISH_UTILS_H

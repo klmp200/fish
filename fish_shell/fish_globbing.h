@@ -14,4 +14,8 @@ int wildcardedStringMatches(char* string1, char* string2);
 
 WordList* splitWordIntoList(char* string, char splitchar);
 
+char* getFileName(char* string);
+
+char* getPath(char* string);
+
 #endif //FISH_FISH_GLOBBING_H

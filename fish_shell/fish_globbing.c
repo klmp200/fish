@@ -41,6 +41,11 @@ WordList * fishExpand(WordList *wordList) {
     }
 
     freeWordList(wordList);
+
+    //TODO : move this in recursion in case multiples commands are in the same line
+    if(newWordList->size == 1){
+      addEndWordList(newWordList, (char*) ERROR_STRING);
+    }
 		return newWordList;
 
 	}
@@ -58,6 +63,10 @@ WordList* expandWord(char* word){
   }
 
   else{
+
+    WordList* testList = splitWordIntoList(word, '/');
+    printWordList(testList);
+    freeWordList(testList);
 
     return getFiles(word, (char*) "*");//temporary
     //return();
@@ -161,7 +170,7 @@ int wildcardedStringMatches(char* string1, char* string2){//TODO
 
 	else{
 
-		printf("warning : fuck you, strings are considered null");
+		printf("fish : Warning : fuck you, strings are considered null");
 		crash();
 		return 0;
 
@@ -169,4 +178,55 @@ int wildcardedStringMatches(char* string1, char* string2){//TODO
 
 }
 
+//beware : will purposedly ignore the first occurence of the character
+WordList* splitWordIntoList(char* string, char splitChar){
 
+  if(stringContains(string, '/')){
+
+    int i = 0;
+    int mark = 0;
+    int finished = 0;
+    int firstEncounter = 0;
+    WordList* newWordList = createWordList();
+
+    while(!finished){
+
+      if(string[i] == splitChar || string[i] == '\0'){
+
+        if(!firstEncounter){
+
+          firstEncounter = 1;
+
+        }
+
+        else{
+
+          char* tempStr = strndup(string + mark, i - mark);
+
+          if(tempStr == NULL){
+            crash();
+          }
+
+          addEndWordList(newWordList, tempStr);
+          free(tempStr);
+          mark = i;
+          if(string[i] == '\0'){
+            finished = 1;
+          }
+        }
+
+      }
+      i++;
+
+    }
+
+    return newWordList;
+
+  }
+  else{
+    WordList* newWordList = createWordList();
+    addEndWordList(newWordList, string);
+    return newWordList;
+  }
+
+}

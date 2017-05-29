@@ -331,4 +331,3 @@ int stringContains(char * string, char charToTest){
 	return 0;
 
 }
-

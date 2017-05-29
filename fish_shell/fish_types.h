@@ -6,6 +6,7 @@
 #define FISH_FISH_TYPES_H
 
 #define EXIT_SIGNAL -100
+#define ERROR_STRING "\n"
 
 /* Custom types */
 
@@ -34,6 +35,7 @@ typedef struct {
 	WordListElement * first;
 	WordListElement * last;
 } WordList;
+
 
 typedef struct {
 	char *PS1;

@@ -12,4 +12,6 @@ WordList* expandWord(char* word);
 
 int wildcardedStringMatches(char* string1, char* string2);
 
+WordList* splitWordIntoList(char* string, char splitchar);
+
 #endif //FISH_FISH_GLOBBING_H

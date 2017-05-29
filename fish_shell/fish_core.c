@@ -194,10 +194,17 @@ int fishExecute(WordList *list) {
 
 int loadRightCommand(WordArray *array){
 	int i;
-	if (array->size <= 0) return 1;
-	for (i = 0; i < getNbBuiltins(); i++) {
-		if (!strcmp(array->words[0], getBuiltinCommandsStr()[i])) {
-			return getBuiltinCommands()[i](array);
+	if (array->size < 0)
+		return 1;
+
+	for (i=0; i < getNbBuiltins(); i++){
+		if(array->words[0] != NULL){
+			if (!strcmp(array->words[0], getBuiltinCommandsStr()[i])){
+				return getBuiltinCommands()[i](array);
+			}
+		}
+		else{
+			crash();
 		}
 	}
 	return fishLoad(array);

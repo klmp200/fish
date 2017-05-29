@@ -35,4 +35,13 @@ WordList * splitWordList(WordList *list, char *regex);
 
 char * splitWord(char * origin, int beginning_index, int size_to_delete); // Tested
 
+void concatWordList(WordList* list1, WordList* list2);
+
+void printWordList(WordList* list);
+
+int stringContains(char* string, char charToTest);
+
+char* trueStrcat(char* string1, char* string2);
+
+
 #endif //FISH_FISH_UTILS_H

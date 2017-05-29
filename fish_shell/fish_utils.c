@@ -117,6 +117,31 @@ void freeWordList(WordList *list) {
 	free(list);
 }
 
+void concatWordList(WordList* list1, WordList* list2){//return a single list containing all elements of both lists
+
+  if(list1 == NULL || list2 == NULL){
+    crash();
+  }
+  else if(list2->size != 0){
+
+    WordListElement* tempElement = list2->first;
+
+    for(int i = 0; i < list2->size; i++){
+
+      addEndWordList(list1, tempElement->word);
+      tempElement = tempElement->next;
+
+    }
+
+    freeWordList(list2);
+
+  }
+  else{
+    freeWordList(list2);
+  }
+
+}
+
 WordArray *wordListToWordArray(WordList *list) {
 	WordArray *array = (WordArray*) malloc(sizeof(WordArray));
 	WordListElement *current = list->first;
@@ -263,3 +288,58 @@ WordList *splitWordList(WordList *list, char *regex) {
 	return new_list;
 }
 
+//for debugging purposes
+void printWordList(WordList* list){
+
+
+  if(list != NULL){
+
+    printf("--- list ---\n");
+    printf("size : %i\n", list->size);
+
+    int i = 0;
+    WordListElement* tempElement = list->first;
+
+    for(i=0; i<list->size; i++){
+
+      printf("element %i : %s\n",i, tempElement->word);
+      tempElement = tempElement->next;
+
+    }
+
+    printf("--- end ---\n");
+
+  }
+  else{
+    fprintf(stderr, "fish : Warning : list is null. Are you stupid ?\n");
+  }
+
+}
+
+int stringContains(char * string, char charToTest){
+
+	int i = 0;
+
+	while(string[i] != '\0'){
+
+		if(string[i] == charToTest){
+			return 1;
+		}
+		i++;
+	}
+
+	return 0;
+
+}
+
+//dont read this, and if you do, do not complain, it's strcat's fault. you've been warned.
+char* trueStrcat(char* string1, char* string2){
+
+  char* newString = (char*) malloc(sizeof(char) * (strlen(string1) + strlen(string2)) + 1);
+  if(newString == NULL) crash();
+  newString[0] = '\0';
+  strcat(newString, string1);
+  strcat(newString, string2);
+  return newString;
+
+}

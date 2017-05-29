@@ -11,9 +11,9 @@ include_directories(
         "${source_dir}/googlemock/include"
 )
 
-set(SOURCE_FILES_TESTS main.cpp FishCoreTests.cpp FishUtilsTests.cpp FishSettings.cpp )
+set(SOURCE_FILES_TESTS main.cpp FishCoreTests.cpp FishUtilsTests.cpp FishSettingsTests.cpp )
 
 add_executable(fish_tests ${SOURCE_FILES_TESTS})
 
-target_link_libraries(fish_tests libgtest libgmock)
+target_link_libraries(fish_tests libgtest libgmock pcre)
 

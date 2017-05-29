@@ -13,15 +13,12 @@
 #include "fish_types.h"
 #include "fish_commands.h"
 #include "fish_utils.h"
+#include "fish_settings.h"
 
 /* WordArray functions */
 
 WordList * split(char *string, char *separator); // Tested
 
-/* Settings functions */
-
-Settings * getSettings();
-void freeSettings(Settings *settings);
 
 
 /* General purpose functions */

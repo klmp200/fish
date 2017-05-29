@@ -3,14 +3,13 @@
 #include "../fish_shell/fish_settings.h"
 
 TEST(free_settings_Test, freeSettings){
-	Settings *s1 = getSettings();
-	Settings *s2 = getSettings();
+	Settings *s = getSettings();
 
-	freeSettings(s1);
+	ASSERT_STREQ(s->PS1, "->");
 
-	ASSERT_STRNE(s1->PS1, s2->PS1);
+	freeSettings(s);
 
-	freeSettings(s2);
+	ASSERT_STRNE(s->PS1, "->");
 }
 
 TEST(extract_variable_Test, extractVariable){

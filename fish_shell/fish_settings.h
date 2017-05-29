@@ -11,3 +11,4 @@ void freeSettings(Settings *settings); //TESTED
 char* extractVariable(char* filename, char* var);//TESTED
 
 #endif //FISH_FISH_SETTINGS_H
+

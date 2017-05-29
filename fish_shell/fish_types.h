@@ -42,7 +42,7 @@ typedef struct {
 typedef struct {
 	char *PS1;
 	char *PS2;
-	struct passwd* user1;
+	struct passwd* passwd;
 } Settings;
 
 

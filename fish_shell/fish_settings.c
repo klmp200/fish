@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <string.h>
+#include "fish_settings.h"
 #include "fish_core.h"
 
 Settings *getSettings() {
@@ -14,50 +15,24 @@ Settings *getSettings() {
 
 	uid_t uid;
 	struct passwd *user;
-	char* file = (char*)malloc(sizeof(char*)*50);
+	char* filename = NULL;
 	uid = getuid();
 	user = getpwuid(uid);
 
-	file = "\0";
-	file = strcat(user->pw_dir, "/.fishrc");
-	s->user1 = user;
-	s->PS1 = extractVariable(file, "PS1");
-	s->PS2 = extractVariable(file,"PS2");
+	filename = (char*) malloc(sizeof(char*)*(strlen(user->pw_dir) + FISH_RC_FILE_SIZE + 1));
+
+	if (filename == NULL) crash();
+
+	filename[0] = '\0';
+	filename = strcat(filename, user->pw_dir);
+	filename = strcat(filename, (char*) FISH_RC_FILE);
+	s->passwd = user;
+	s->PS1 = extractVariable(filename, (char*) "PS1");
+	s->PS2 = extractVariable(filename, (char*) "PS2");
+
+	free(filename);
 	return s;
 }
-
-// char* convertPS(char* s){
-// 	if(s != NULL){
-// 		printf("Quelque chose à convertir\n");
-// 		int i=0;
-// 		char* PS = (char*) malloc(sizeof(char*)* 20);
-// 		PS[0] = '\0';
-// 		while(s[i] != '\0'){
-// 			if(s[i]=='\\'){
-// 			 	i++;
-// 			 	 switch (s[i]){
-// 			 	 case '\\' : PS[i-1] = '\\';
-// 			 	 case 'u' : PS[i-1] = '?';
-// 			 	 default : PS[i] = s[i];
-					
-// 			 	}
-// 			 	i++;
-// 			 }else{
-// 				PS[i] = s[i];
-// 				i++;
-				
-// 			}
-// 		printf("Prompt %i: %s ! %s traiter: %c donne: %c \n",i,PS, s, s[i-1], PS[i-1] );
-			
-// 		}
-// 		return PS;
-// 		PS = NULL;
-// 		free(PS);
-// 	}else{
-// 		printf("Void argument, try again Ame\n");
-// 		return strdup(">");
-// 	}
-// }
 
 void freeSettings(Settings *settings){
 	if (settings != NULL){
@@ -69,43 +44,36 @@ void freeSettings(Settings *settings){
 
 char* extractVariable(char* filename, char* var){
 	FILE *file = fopen ( filename, "r" );
-   if ( file != NULL )
-   {
-      char line [ 128 ]; /* or other suitable maximum line size */
- 
-		while ( fgets ( line, sizeof line, file ) != NULL ) /* read a line */
-		{
-		 	printf("Ligne : %s", line); /* write the line */
-			if (strncmp(line, var, strlen(var)-1) == 0)
-			{
-				int i=0;
-				char* tmp = (char*) malloc(sizeof(char*)* (strlen(line)-strlen(var)));
-				//tmp = "\0";
-				while(var[i] != '\0')
-				{
+	int var_size = strlen(var);
+	char *tmp = NULL;
+	char line[FISH_BUFFER_SIZE];
+	int i = 0;
+
+	if ( file != NULL ){
+
+		while ( fgets ( line, FISH_BUFFER_SIZE, file ) != NULL ) {
+
+			if (!strncmp(line, var, var_size)) {
+
+				tmp = (char*) malloc(sizeof(char*)* (strlen(line)-var_size));
+				if (tmp == NULL) crash();
+
+				i = var_size + 1;
+				while(line[i] != '\n' && line[i] != '\0'){
+					tmp[i-var_size-1] = line[i];
 					i++;
 				}
-				i= i+1;
-				while(line[i] != '\n' && line[i] != '\0')
-				{
-					printf("ici: %s\n", tmp);
-					tmp[i-strlen(var)-1] = line[i];
-					i++;
-				}
-				tmp[i-strlen(var)-1]='\0';
-				printf("Result: %s\n",tmp);
-				return tmp;
-				free(tmp);
-		    }
+				tmp[i-var_size-1]='\0';
+			}
 		}
-      fclose ( file );
-      printf("Variable doesn't exit\n");
-   }
-   else
-   {
-      perror ( filename ); /* why didn't the file open? */
-   }
-   return NULL;
+
+		fclose(file);
+		return tmp;
+	}
+	else {
+		perror ( filename ); /* why didn't the file open? */
+	}
+	return NULL;
 }
 
 

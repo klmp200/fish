@@ -54,49 +54,117 @@ WordList * fishExpand(WordList *wordList) {
 
 }
 
-WordList* expandWord(char* word){
+WordList* expandWord(char* path){
 
-  if(!stringContains(word, '/')){
+  if(!stringContains(path, '/')){
 
-    return getFiles((char*) "./", word);
+    return getFiles((char*) "./", path);
 
   }
 
   else{
 
-    WordList* pathList = splitWordIntoList(word, '/');
-    WordList* expandedArgsList = createWordList();
-    if (expandedArgsList == NULL) crash();
-    WordListElement* tempElement;
-    int i;
-
-    if(pathList->size >= 1){
-      tempElement = pathList->first;
-      for(i=0; i < pathList->size; i++){
-
-        printf("\nBASE PATH %s\n", tempElement->word);
-        char* tempPath = getPath(tempElement->word);
-        printf("\nPATH : %s\n", tempPath);
-        char* tempFileName = getFileName(tempElement->word);
-        printf("\nFILENAME : %s\n", tempFileName);
-
-        concatWordList(expandedArgsList, getFiles(tempPath, tempFileName));
-        printWordList(expandedArgsList);
-        tempElement = tempElement->next;
-
-        free(tempPath);
-        free(tempFileName);
-
-      }
-    }
-
-    freeWordList(pathList);
-
-    return expandedArgsList;
-    //return getFiles(word, (char*) "*");//temporary
+    WordList* expandedList = createWordList();
+    recursiveExpandWord(path, expandedList);
+    return expandedList;
 
   }
 
+
+}
+
+void recursiveExpandWord(char* path, WordList* listToExpand){
+
+  int lastToExpand = 1;
+  int i = 0;
+  int indexToExpand = -1;
+
+  //TODO : free
+  WordList* pathToList = splitWordIntoList(path, '/');
+  WordListElement* tempElement; //beware of the size, should be checked before anyway
+  tempElement = pathToList->first;
+
+
+  while(i < pathToList->size - 1 && indexToExpand == -1){
+
+    if(stringContains(tempElement->word, '*') || stringContains(tempElement->word, '?')){
+      indexToExpand = i;
+      lastToExpand = 0;
+    }
+
+    i++;
+    tempElement = tempElement->next;
+
+  }
+
+
+  if(lastToExpand){
+    concatWordList(listToExpand, getFiles(getPath(path), getFileName(path)));
+    free(pathToList);
+  }
+  else{
+
+    char* correctedPath = concatWordListToWord(pathToList,0, indexToExpand);
+    WordList* foundFiles = getFiles(getPath(correctedPath), getFileName(correctedPath));
+
+    if(foundFiles->size > 0){
+
+      tempElement = foundFiles->first;
+      char* concatenedEndOfPath = concatWordListToWord(foundFiles, indexToExpand + 1, foundFiles->size - 1);
+
+        for(i=0; i < foundFiles->size; i++){
+
+          tempElement->word = trueStrcat(tempElement->word, concatenedEndOfPath);
+          recursiveExpandWord(tempElement->word, listToExpand);
+
+          tempElement = tempElement->next;
+
+        }
+
+      free(concatenedEndOfPath);
+
+    }
+
+    freeWordList(pathToList);
+    free(correctedPath);
+    freeWordList(foundFiles);
+
+  }
+
+
+}
+
+char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex){
+
+  if(list->size == 0 || list == NULL) crash();
+
+  int i;
+  char* concatenedString = (char*) malloc(sizeof(char));
+  if(concatenedString == NULL) crash();
+
+  if(lastElemIndex > list->size -1){
+    lastElemIndex = list->size - 1;
+    fprintf(stderr, "fish : Warning : you are a miserable failure, your element is beyond the list. pfff. I corrected it for you.");
+  }
+  if(firstElemIndex > lastElemIndex){
+    firstElemIndex = lastElemIndex;
+    fprintf(stderr, "fish : Warning : how are you so bad ? your inferior index is superior to your superior index. pfff. I corrected it for you.");
+  }
+
+  WordListElement* tempElement = list->first;
+  for(i=0; i < firstElemIndex; i++){
+
+    tempElement = tempElement->next;
+
+  }
+  for(i=firstElemIndex; i < lastElemIndex; i++){
+
+    trueStrcat(concatenedString, tempElement->word);
+    tempElement = tempElement->next;
+
+  }
+
+  return concatenedString;
 
 }
 

@@ -79,9 +79,8 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
   int i = 0;
   int indexToExpand = -1;
 
-  //TODO : free
   WordList* pathToList = splitWordIntoList(path, '/');
-  WordListElement* tempElement; //beware of the size, should be checked before anyway
+  WordListElement* tempElement; //beware of the size, should be checked before anyway (?)
   tempElement = pathToList->first;
 
 
@@ -104,13 +103,14 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
   }
   else{
 
-    char* correctedPath = concatWordListToWord(pathToList,0, indexToExpand);
+    char* correctedPath = concatWordListToWord(pathToList,0, indexToExpand + 1);
     WordList* foundFiles = getFiles(getPath(correctedPath), getFileName(correctedPath));
+    printWordList(foundFiles);
 
     if(foundFiles->size > 0){
 
       tempElement = foundFiles->first;
-      char* concatenedEndOfPath = concatWordListToWord(foundFiles, indexToExpand + 1, foundFiles->size - 1);
+      char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand + 1, foundFiles->size - 1);
 
         for(i=0; i < foundFiles->size; i++){
 
@@ -141,6 +141,7 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
   int i;
   char* concatenedString = (char*) malloc(sizeof(char));
   if(concatenedString == NULL) crash();
+  concatenedString[0] = '\0';
 
   if(lastElemIndex > list->size -1){
     lastElemIndex = list->size - 1;
@@ -159,7 +160,7 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
   }
   for(i=firstElemIndex; i < lastElemIndex; i++){
 
-    trueStrcat(concatenedString, tempElement->word);
+    concatenedString = trueStrcat(concatenedString, tempElement->word);
     tempElement = tempElement->next;
 
   }
@@ -313,6 +314,11 @@ WordList* splitWordIntoList(char* string, char splitChar){
     int firstEncounter = 0; //boolean
     WordList* newWordList = createWordList();
     if(newWordList == NULL) crash();
+
+    if(string[0] == '.'){
+      addEndWordList(newWordList, (char*) ".");
+      i++;
+    }
 
     while(!finished){
 

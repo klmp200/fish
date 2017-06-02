@@ -66,6 +66,7 @@ WordList* expandWord(char* path){
 
     WordList* expandedList = createWordList();
     recursiveExpandWord(path, expandedList);
+    printWordList(expandedList);
     return expandedList;
 
   }
@@ -75,11 +76,14 @@ WordList* expandWord(char* path){
 
 void recursiveExpandWord(char* path, WordList* listToExpand){
 
+  printf("launching recursive expand on %s\n", path);
+
   int lastToExpand = 1;
   int i = 0;
   int indexToExpand = -1;
 
   WordList* pathToList = splitWordIntoList(path, '/');
+  printWordList(pathToList);
   WordListElement* tempElement; //beware of the size, should be checked before anyway (?)
   tempElement = pathToList->first;
 
@@ -104,13 +108,18 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
   else{
 
     char* correctedPath = concatWordListToWord(pathToList,0, indexToExpand + 1);
+    printf("correctedPath is : %s\n", correctedPath);
     WordList* foundFiles = getFiles(getPath(correctedPath), getFileName(correctedPath));
+    printf("list of found files :\n");
     printWordList(foundFiles);
 
     if(foundFiles->size > 0){
 
       tempElement = foundFiles->first;
       char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand + 1, foundFiles->size - 1);
+      printf("list to be concatened is : \n");
+      printWordList(pathToList);
+      printf("concatenedEndOfPath is : %s\n", concatenedEndOfPath);
 
         for(i=0; i < foundFiles->size; i++){
 
@@ -131,7 +140,6 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
 
   }
 
-  return concatenedString;
 
 }
 
@@ -145,12 +153,13 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
   concatenedString[0] = '\0';
 
   if(lastElemIndex > list->size -1){
+    printf("last elem index was %i, while size-1 was %i\n", lastElemIndex, list->size - 1);
     lastElemIndex = list->size - 1;
-    fprintf(stderr, "fish : Warning : you are a miserable failure, your element is beyond the list. pfff. I corrected it for you.");
+    fprintf(stderr, "fish : Warning : you are a miserable failure, your element is beyond the list. pfff. I corrected it for you.\n");
   }
   if(firstElemIndex > lastElemIndex){
     firstElemIndex = lastElemIndex;
-    fprintf(stderr, "fish : Warning : how are you so bad ? your inferior index is superior to your superior index. pfff. I corrected it for you.");
+    fprintf(stderr, "fish : Warning : how are you so bad ? your inferior index is superior to your superior index. pfff. I corrected it for you.\n");
   }
 
   WordListElement* tempElement = list->first;

@@ -131,6 +131,7 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
 
   }
 
+  return concatenedString;
 
 }
 

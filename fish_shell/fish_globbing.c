@@ -116,7 +116,7 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
     if(foundFiles->size > 0){
 
       tempElement = foundFiles->first;
-      char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand + 1, foundFiles->size - 1);
+      char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand + 1, pathToList->size - 1);
       printf("list to be concatened is : \n");
       printWordList(pathToList);
       printf("concatenedEndOfPath is : %s\n", concatenedEndOfPath);

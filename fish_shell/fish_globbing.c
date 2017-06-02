@@ -102,7 +102,10 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
 
 
   if(lastToExpand){
+	printf("found %i files in %s, looking for regex %s\n", getFiles(getPath(path), getFileName(path))->size,getPath(path), getFileName(path));
     concatWordList(listToExpand, getFiles(getPath(path), getFileName(path)));
+	printf("listToExpand should be : \n");
+	printWordList(listToExpand);
     free(pathToList);
   }
   else{
@@ -110,13 +113,13 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
     char* correctedPath = concatWordListToWord(pathToList,0, indexToExpand + 1);
     printf("correctedPath is : %s\n", correctedPath);
     WordList* foundFiles = getFiles(getPath(correctedPath), getFileName(correctedPath));
-    printf("list of found files :\n");
+    printf("list of found files in %s, looking for regex %s:\n", getPath(correctedPath), getFileName(correctedPath));
     printWordList(foundFiles);
 
     if(foundFiles->size > 0){
 
       tempElement = foundFiles->first;
-      char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand + 1, pathToList->size - 1);
+      char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand, pathToList->size - 1);
       printf("list to be concatened is : \n");
       printWordList(pathToList);
       printf("concatenedEndOfPath is : %s\n", concatenedEndOfPath);
@@ -185,12 +188,19 @@ char* getFileName(char* string){
     return string;
   }
   else{
-    int i = 0;
+    /*int i = 0;
     while(string[i] != '/'){
       i++;
     }
 
-    return strndup(string + i + 1, strlen(string) - i);
+    return strndup(string + i + 1, strlen(string) - i);*/
+
+	int i = strlen(string) - 1;
+	while(string[i] != '/'){
+		i--;
+	}
+	printf("strndup SAID %s\n", strndup(string + 1 + i,strlen(string) - 1));
+	return strndup(string + i + 1,strlen(string) - 1);
   }
 }
 

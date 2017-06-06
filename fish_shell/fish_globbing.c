@@ -66,7 +66,6 @@ WordList* expandWord(char* path){
 
     WordList* expandedList = createWordList();
     recursiveExpandWord(path, expandedList);
-    printWordList(expandedList);
     return expandedList;
 
   }
@@ -76,14 +75,12 @@ WordList* expandWord(char* path){
 
 void recursiveExpandWord(char* path, WordList* listToExpand){
 
-  printf("launching recursive expand on %s\n", path);
 
   int lastToExpand = 1;
   int i = 0;
   int indexToExpand = -1;
 
   WordList* pathToList = splitWordIntoList(path, '/');
-  printWordList(pathToList);
   WordListElement* tempElement; //beware of the size, should be checked before anyway (?)
   tempElement = pathToList->first;
 
@@ -102,31 +99,36 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
 
 
   if(lastToExpand){
-	printf("found %i files in %s, looking for regex %s\n", getFiles(getPath(path), getFileName(path))->size,getPath(path), getFileName(path));
-    concatWordList(listToExpand, getFiles(getPath(path), getFileName(path)));
-	printf("listToExpand should be : \n");
-	printWordList(listToExpand);
-    free(pathToList);
+    char* tmpPath = getPath(path);
+    char* tmpFileName = getFileName(path);
+    concatWordList(listToExpand, getFiles(tmpPath, tmpFileName));
+    free(tmpPath);
+    free(tmpFileName);
+    freeWordList(pathToList);
   }
   else{
 
     char* correctedPath = concatWordListToWord(pathToList,0, indexToExpand + 1);
-    printf("correctedPath is : %s\n", correctedPath);
-    WordList* foundFiles = getFiles(getPath(correctedPath), getFileName(correctedPath));
-    printf("list of found files in %s, looking for regex %s:\n", getPath(correctedPath), getFileName(correctedPath));
-    printWordList(foundFiles);
+    char* pathOfCorrectedPath = getPath(correctedPath);
+    char* fileNameOfCorrectedPath = getFileName(correctedPath);
+    WordList* foundFiles = getFiles(pathOfCorrectedPath, fileNameOfCorrectedPath);
+    char* tmpWord = NULL;
+
+    free(pathOfCorrectedPath);
+    free(fileNameOfCorrectedPath);
+    free(correctedPath);
 
     if(foundFiles->size > 0){
 
       tempElement = foundFiles->first;
       char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand, pathToList->size - 1);
-      printf("list to be concatened is : \n");
-      printWordList(pathToList);
-      printf("concatenedEndOfPath is : %s\n", concatenedEndOfPath);
 
         for(i=0; i < foundFiles->size; i++){
 
+          tmpWord = tempElement->word;
           tempElement->word = trueStrcat(tempElement->word, concatenedEndOfPath);
+          free(tmpWord);
+          tmpWord = NULL;
           recursiveExpandWord(tempElement->word, listToExpand);
 
           tempElement = tempElement->next;
@@ -138,7 +140,6 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
     }
 
     freeWordList(pathToList);
-    free(correctedPath);
     freeWordList(foundFiles);
 
   }
@@ -152,11 +153,11 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
 
   int i;
   char* concatenedString = (char*) malloc(sizeof(char));
+  char* tmpConcatenedString = concatenedString;
   if(concatenedString == NULL) crash();
   concatenedString[0] = '\0';
 
   if(lastElemIndex > list->size -1){
-    printf("last elem index was %i, while size-1 was %i\n", lastElemIndex, list->size - 1);
     lastElemIndex = list->size - 1;
     fprintf(stderr, "fish : Warning : you are a miserable failure, your element is beyond the list. pfff. I corrected it for you.\n");
   }
@@ -174,6 +175,7 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
   for(i=firstElemIndex; i < lastElemIndex; i++){
 
     concatenedString = trueStrcat(concatenedString, tempElement->word);
+    free(tmpConcatenedString);
     tempElement = tempElement->next;
 
   }
@@ -184,24 +186,23 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
 
 char* getFileName(char* string){
 
+  int wordSize = strlen(string) - 1;
+
   if(!stringContains(string, '/')){
     return string;
   }
   else{
-    /*int i = 0;
+
+    int i = wordSize;
+
     while(string[i] != '/'){
-      i++;
+      i--;
     }
 
-    return strndup(string + i + 1, strlen(string) - i);*/
+   return strndup(string + i + 1,wordSize);
 
-	int i = strlen(string) - 1;
-	while(string[i] != '/'){
-		i--;
-	}
-	printf("strndup SAID %s\n", strndup(string + 1 + i,strlen(string) - 1));
-	return strndup(string + i + 1,strlen(string) - 1);
   }
+
 }
 
 

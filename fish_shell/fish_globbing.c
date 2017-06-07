@@ -38,6 +38,7 @@ WordList * fishExpand(WordList *wordList) {
 
 			tempElement = tempElement->next;
 
+
     }
 
     freeWordList(wordList);
@@ -122,14 +123,20 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
 
       tempElement = foundFiles->first;
       char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand, pathToList->size - 1);
+      int isDir;
 
         for(i=0; i < foundFiles->size; i++){
 
           tmpWord = tempElement->word;
+
+          isDir = isDirectory(tmpWord);
+
           tempElement->word = trueStrcat(tempElement->word, concatenedEndOfPath);
           free(tmpWord);
           tmpWord = NULL;
-          recursiveExpandWord(tempElement->word, listToExpand);
+          if(isDir){
+            recursiveExpandWord(tempElement->word, listToExpand);
+          }
 
           tempElement = tempElement->next;
 
@@ -153,7 +160,7 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
 
   int i;
   char* concatenedString = (char*) malloc(sizeof(char));
-  char* tmpConcatenedString = concatenedString;
+  char* tmpConcatenedString = NULL;
   if(concatenedString == NULL) crash();
   concatenedString[0] = '\0';
 
@@ -174,6 +181,7 @@ char* concatWordListToWord(WordList* list,int firstElemIndex, int lastElemIndex)
   }
   for(i=firstElemIndex; i < lastElemIndex; i++){
 
+    tmpConcatenedString = concatenedString;
     concatenedString = trueStrcat(concatenedString, tempElement->word);
     free(tmpConcatenedString);
     tempElement = tempElement->next;

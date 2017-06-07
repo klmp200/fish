@@ -43,5 +43,7 @@ int stringContains(char* string, char charToTest);
 
 char* trueStrcat(char* string1, char* string2);
 
+int isDirectory(char* path);
+
 
 #endif //FISH_FISH_UTILS_H

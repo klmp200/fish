@@ -7,6 +7,8 @@
 #include <string.h>
 #include <time.h>
 #include <pcre.h>
+#include <dirent.h>
+#include <errno.h>
 #include "fish_utils.h"
 #include "fish_types.h"
 
@@ -342,4 +344,23 @@ char* trueStrcat(char* string1, char* string2){
   strcat(newString, string2);
   return newString;
 
+}
+
+int isDirectory(char* path){
+
+  DIR* directory = opendir(path);
+
+  //printf("testing %s\n", path);
+
+  if(directory != NULL){
+    closedir(directory);
+    return 1;
+  }
+  else if(errno == ENOTDIR){
+    return 0;
+  }
+  else{
+    fprintf(stderr, "fish : Warning : %s is an invalid path you stupid human\n", path);
+    return 0; //hihi
+  }
 }

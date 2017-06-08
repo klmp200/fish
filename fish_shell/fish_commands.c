@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "fish_core.h"
 #include "fish_types.h"
+#include "fish_settings.h"
 
 /* Necessary global variables */
 char * builtinCommandsStr[] = {
@@ -32,8 +33,16 @@ builtinCommand **getBuiltinCommands(){
 
 int fishCd(WordArray *args) {
 	if (args->size < 2){
-		fprintf(stderr, "fish: Où sont les arguments de ta commande \"cd\" connard ?!\n");
-		return EXIT_FAILURE;
+		//fprintf(stderr, "fish: Où sont les arguments de ta commande \"cd\" connard ?!\n");
+    Settings* settings = getSettings();
+
+    if(chdir(settings->passwd->pw_dir) != 0){
+      perror("fish");
+      return EXIT_FAILURE;
+    }
+    freeSettings(settings);
+		//return EXIT_SUCCESS;
+
 	} else {
 		if (chdir(args->words[1]) != 0){
 			perror("fish");

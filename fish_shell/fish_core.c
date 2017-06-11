@@ -13,6 +13,23 @@
 #include "fish_globbing.h"
 #include "fish_types.h"
 
+#define REDIRECT_EXIT_FREE() signal = EXIT_FAILURE; \
+	freeWordList(list);\
+	freeWordList(splited);
+
+#define REDIRECT_STD(std, open_mode) if (splited->size == 0) {REDIRECT_EXIT_FREE()\
+    } else {\
+		redirect_file = fopen(splited->first->word, open_mode);\
+		if (redirect_file == NULL) { REDIRECT_EXIT_FREE() } else {\
+			saved_std = dup(std);\
+			dup2(fileno(redirect_file), std);\
+			signal = fishExecute(list);\
+			dup2(saved_std, std);\
+			fclose(redirect_file);\
+			freeWordList(splited);\
+		}\
+	}
+
 pipe_redirection * getRedirection(){
 	static pipe_redirection * redirection = NULL;
 
@@ -59,7 +76,7 @@ void fishLoop(Settings * settings){
         line = fishReadLine();
 
 		r->to_use = 0;
-		r->nb = countSeparators(line, "\\|[^\\|]");
+		r->nb = countSeparators(line, (char*) "\\|[^\\|]");
 		r->nb_max = r->nb;
 		splited = split(line, (char*) FISH_TOKENS);
 		splited = fishExpand(splited);
@@ -194,6 +211,8 @@ int fishExecute(WordList *list) {
 	shell_operator op = NONE;
 	WordArray *array = NULL;
 	pipe_redirection *redirection = NULL;
+	FILE *redirect_file = NULL;
+	int saved_std;
 	int pid;
 	int signal = 1;
 
@@ -269,6 +288,21 @@ int fishExecute(WordList *list) {
 				signal = EXIT_SUCCESS;
 			}
 			break;
+		case REDIRECT_STDOUT_ERASE:
+			REDIRECT_STD(STDOUT_FILENO, "w");
+			break;
+		case REDIRECT_STDOUT_APPEND:
+			REDIRECT_STD(STDOUT_FILENO, "a");
+			break;
+		case REDIRECT_STDERR_ERASE:
+			REDIRECT_STD(STDERR_FILENO, "w");
+			break;
+		case REDIRECT_STDERR_APPEND:
+			REDIRECT_STD(STDERR_FILENO, "a");
+			break;
+		case REDIRECT_STDIN:
+			REDIRECT_STD(STDIN_FILENO, "r");
+			break;
 		default:
 			array = wordListToWordArray(list);
 			signal = loadRightCommand(array);
@@ -308,14 +342,24 @@ WordList * parseWordList(WordList *list, shell_operator *an_operator) {
 			(char*) "\\|\\|",
 			(char*) "&&",
 			(char*) "\\|",
-			(char*) "&"
+			(char*) "&",
+			(char*) "2>>",
+			(char*) ">>",
+			(char*) "2>",
+			(char*) ">",
+			(char*) "<[^<]"
 	};
 	shell_operator op[] = {
 			OR,
 			REVERSE_AND,
 			AND,
 			PIPE,
-			BACKGROUND_PROCESS
+			BACKGROUND_PROCESS,
+			REDIRECT_STDERR_APPEND,
+			REDIRECT_STDOUT_APPEND,
+			REDIRECT_STDERR_ERASE,
+			REDIRECT_STDOUT_ERASE,
+			REDIRECT_STDIN
 	};
 	WordList *newList = NULL;
 	int max = sizeof(op_str) / sizeof(char*);

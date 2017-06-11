@@ -20,7 +20,7 @@ pipe_redirection * getRedirection(){
 	if (redirection == NULL){
 		redirection = (pipe_redirection*) malloc(sizeof(pipe_redirection));
 		if (redirection == NULL) crash();
-		redirection->file_name = strdup(template);
+		redirection->file_name = strdup((char*) template);
 		redirection->tmp_file = mkstemp(redirection->file_name);
 		redirection->to_use = 0;
 		redirection->read = 0;

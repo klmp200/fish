@@ -23,4 +23,8 @@ int fishExit(WordArray * args);
 
 int fishKek(WordArray *args);
 
+int fishClear(WordArray *args);
+
+void fishSignalHandler(int s);
+
 #endif //FISH_FISH_COMMANDS_H

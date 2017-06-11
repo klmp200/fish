@@ -29,5 +29,8 @@ TEST(command_split, split){
 }
 
 TEST(count_tokens, countSeparators){
-	ASSERT_TRUE(countSeparators((char*) "Ceci est un super \n test", (char*) FISH_TOKENS) == 6);
+	ASSERT_TRUE(countSeparators((char*) "Ceci est un super \n test", (char*) " ") == 5);
+	ASSERT_TRUE(countSeparators((char*) "patate | patate| patatine", (char*) "\\|") == 2);
+	ASSERT_TRUE(countSeparators((char*) "patate | patate| patatine |", (char*) "\\|") == 3);
+	ASSERT_TRUE(countSeparators((char*) "patate | patate|| patatine |", (char*) "\\|[^\\|]") == 2);
 }

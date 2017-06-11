@@ -20,8 +20,19 @@ typedef enum {
 	BACKGROUND_PROCESS,
 	AND,
 	OR,
-	REVERSE_AND
+	REVERSE_AND,
+	REDIRECT_STDOUT_ERASE,
+	REDIRECT_STDOUT_APPEND,
+	REDIRECT_STDERR_ERASE,
+	REDIRECT_STDERR_APPEND,
+	REDIRECT_STDIN
 } shell_operator ;
+
+typedef enum {
+	READ,
+	WRITE,
+	READ_AND_WRITE
+} redirection_mode ;
 
 typedef struct {
 	char ** words;
@@ -47,6 +58,15 @@ typedef struct {
 	struct passwd* passwd;
 } Settings;
 
+typedef struct {
+	int to_use;
+	int nb;
+	int nb_max;
+	int file_use;
+	int tmp_files[2];
+	char * files_name[2];
+	redirection_mode read;
+} pipe_redirection;
 
 typedef int (builtinCommand) (WordArray*);
 

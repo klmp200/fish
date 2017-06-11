@@ -47,6 +47,12 @@ typedef struct {
 	struct passwd* passwd;
 } Settings;
 
+typedef struct {
+	int to_use;
+	int read;
+	int tmp_file;
+	char * file_name;
+} pipe_redirection;
 
 typedef int (builtinCommand) (WordArray*);
 

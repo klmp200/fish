@@ -27,7 +27,7 @@ void fishLoop(Settings * settings);
 
 char * fishReadLine();
 
-int countSeparators(char *string, char *separators); // Tested
+int countSeparators(char *string, char *regex); // Tested
 
 int fishLoad(WordArray *array);
 
@@ -36,5 +36,13 @@ int fishExecute(WordList *list);
 WordList *parseWordList(WordList *list, shell_operator *an_operator);
 
 int loadRightCommand(WordArray *array);
+
+/* IN/OUT functions */
+
+/* Get a global pipe_redirection structure */
+pipe_redirection * getRedirection();
+
+/* Free redirection structure DO NOT TRY TO GET REDIRECTION AFTER */
+void freeRedirection();
 
 #endif //FISH_FISH_CORE_H

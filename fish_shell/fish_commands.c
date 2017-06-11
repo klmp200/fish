@@ -10,6 +10,7 @@
 
 /* Necessary global variables */
 char * builtinCommandsStr[] = {
+		(char *) "clear",
 		(char *) "kek",
 		(char *) "cd",
 		(char *) "help",
@@ -17,6 +18,7 @@ char * builtinCommandsStr[] = {
 };
 
 builtinCommand *builtinCommands[] = {
+		&fishClear,
 		&fishKek,
 		&fishCd,
 		&fishHelp,
@@ -80,4 +82,17 @@ int fishKek(WordArray *args) {
 
 int getNbBuiltins() {
 	return sizeof(builtinCommandsStr) / sizeof(char*);
+}
+
+void fishSignalHandler(int s) {
+	switch (s) {
+		default:
+			break;
+	}
+}
+
+int fishClear(WordArray *args) {
+	if (args != NULL) freeWordArray(args);
+	system("clear");
+	return EXIT_SUCCESS;
 }

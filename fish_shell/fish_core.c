@@ -19,10 +19,15 @@ pipe_redirection * getRedirection(){
 	if (redirection == NULL){
 		redirection = (pipe_redirection*) malloc(sizeof(pipe_redirection));
 		if (redirection == NULL) crash();
-		redirection->file_name = strdup((char*) "/tmp/fishXXXXXX");
-		redirection->tmp_file = mkstemp(redirection->file_name);
+		redirection->files_name[0] = strdup((char*) "/tmp/fishXXXXXX");
+		redirection->files_name[1] = strdup((char*) "/tmp/fishXXXXXX");
+		redirection->tmp_files[0] = mkstemp(redirection->files_name[0]);
+		redirection->tmp_files[1] = mkstemp(redirection->files_name[1]);
 		redirection->to_use = 0;
-		redirection->read = 0;
+		redirection->read = WRITE;
+		redirection->nb = 0;
+		redirection->nb_max = 0;
+		redirection->file_use = 0;
 	}
 
 	return redirection;
@@ -31,10 +36,14 @@ pipe_redirection * getRedirection(){
 
 void freeRedirection(){
 	pipe_redirection * redirection = getRedirection();
-	close(redirection->tmp_file);
-	unlink(redirection->file_name);
-	remove(redirection->file_name);
-	free(redirection->file_name);
+	close(redirection->tmp_files[0]);
+	close(redirection->tmp_files[1]);
+	unlink(redirection->files_name[0]);
+	unlink(redirection->files_name[1]);
+	remove(redirection->files_name[0]);
+	remove(redirection->files_name[1]);
+	free(redirection->files_name[0]);
+	free(redirection->files_name[1]);
 	free(redirection);
 }
 
@@ -50,7 +59,8 @@ void fishLoop(Settings * settings){
         line = fishReadLine();
 
 		r->to_use = 0;
-		r->read = 0;
+		r->nb = countSeparators(line, "\\|[^\\|]");
+		r->nb_max = r->nb;
 		splited = split(line, (char*) FISH_TOKENS);
 		splited = fishExpand(splited);
 
@@ -148,10 +158,13 @@ int fishLoad(WordArray *array) {
 	pid = fork();
 	if (pid == 0){
 		if (redirection->to_use){
-			if (redirection->read){
-				dup2(redirection->tmp_file, STDIN_FILENO);
+			if (redirection->read == READ){
+				dup2(redirection->tmp_files[redirection->file_use], STDIN_FILENO);
+			} else if (redirection->read == WRITE) {
+				dup2(redirection->tmp_files[redirection->file_use], STDOUT_FILENO);
 			} else {
-				dup2(redirection->tmp_file, STDOUT_FILENO);
+				dup2(redirection->tmp_files[!redirection->file_use], STDIN_FILENO);
+				dup2(redirection->tmp_files[redirection->file_use], STDOUT_FILENO);
 			}
 		}
 		/* Executes only in the child process */
@@ -208,14 +221,38 @@ int fishExecute(WordList *list) {
 			break;
 		case PIPE:
 			redirection = getRedirection();
+
+			if (redirection->nb == redirection->nb_max){
+				redirection->read = WRITE;
+				redirection->file_use = 0;
+			} else if (redirection->nb > 0){
+				redirection->read = READ_AND_WRITE;
+				redirection->file_use = !redirection->file_use;
+			} else {
+				redirection->read = READ;
+				redirection->file_use = !redirection->file_use;
+			}
 			redirection->to_use = 1;
-			redirection->read = 0;
+			--redirection->nb;
+
+			if (redirection->read == WRITE) ftruncate(redirection->tmp_files[redirection->file_use], 0);
+			lseek(redirection->tmp_files[0], 0L, 0);
+			lseek(redirection->tmp_files[1], 0L, 0);
+
 			fishExecute(list);
-			lseek(redirection->tmp_file, 0L, 0);
-			redirection->read = 1;
+
+			redirection->read = WRITE;
+			if (redirection->nb > 0){
+				redirection->read = READ_AND_WRITE;
+			} else {
+				redirection->read = READ;
+			}
+			if (redirection->read == WRITE) ftruncate(redirection->tmp_files[redirection->file_use], 0);
+			lseek(redirection->tmp_files[0], 0L, 0);
+			lseek(redirection->tmp_files[1], 0L, 0);
+
 			signal = fishExecute(splited);
-			lseek(redirection->tmp_file, 0L, 0);
-			ftruncate(redirection->tmp_file, 0);
+
 			redirection->to_use = 0;
 			break;
 		case BACKGROUND_PROCESS:

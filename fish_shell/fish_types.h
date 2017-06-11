@@ -23,6 +23,12 @@ typedef enum {
 	REVERSE_AND
 } shell_operator ;
 
+typedef enum {
+	READ,
+	WRITE,
+	READ_AND_WRITE
+} redirection_mode ;
+
 typedef struct {
 	char ** words;
 	int size;
@@ -49,9 +55,12 @@ typedef struct {
 
 typedef struct {
 	int to_use;
-	int read;
-	int tmp_file;
-	char * file_name;
+	int nb;
+	int nb_max;
+	int file_use;
+	int tmp_files[2];
+	char * files_name[2];
+	redirection_mode read;
 } pipe_redirection;
 
 typedef int (builtinCommand) (WordArray*);

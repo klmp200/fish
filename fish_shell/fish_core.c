@@ -72,7 +72,7 @@ void fishLoop(Settings * settings){
 	pipe_redirection *r = getRedirection();
 
     do {
-        printf("%s", settings->PS1);
+        printPS(settings->PS1, settings);
         line = fishReadLine();
 
 		r->to_use = 0;

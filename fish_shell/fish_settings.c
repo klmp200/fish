@@ -46,6 +46,45 @@ void freeSettings(Settings *settings){
 	}
 }
 
+void printPS(char* PS, Settings* s){
+	int buf= FISH_BUFFER_SIZE;
+	int i = 0;
+	int slashed = 0;
+	char* path = NULL;
+	while (PS[i] != '\0'){
+		if(slashed){
+			switch (PS[i])
+			{
+				case 'u':
+					printf("%s",s->passwd->pw_name);
+					break;
+				case 'p':
+					path = (char*) malloc(sizeof(char)*buf);
+					while(getcwd(path,buf) == NULL){ 
+						buf+=FISH_BUFFER_SIZE;
+						free(path);
+						path = (char*) malloc(sizeof(char)*buf);
+					}
+					printf("%s",path);
+					free(path);
+					path = NULL;
+					break;
+				default:printf("%c",PS[i]);
+
+			}
+			slashed = 0;
+		}
+		else if(PS[i] == '\\'){
+			slashed = 1;
+		}else{
+			printf("%c",PS[i]);
+		}
+		++i;
+	}
+
+}
+
+
 char* extractVariable(char* filename, char* var){
 	FILE *file = fopen ( filename, "r" );
 	int var_size = strlen(var);
@@ -79,5 +118,7 @@ char* extractVariable(char* filename, char* var){
 	}
 	return tmp;
 }
+
+
 
 

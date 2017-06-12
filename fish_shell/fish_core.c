@@ -86,6 +86,7 @@ void fishLoop(Settings * settings){
 		free(line);
 
 	} while(status != EXIT_SIGNAL);
+    freeRedirection();
 }
 
 int countSeparators(char *string, char *regex) {

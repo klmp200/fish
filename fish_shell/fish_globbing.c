@@ -250,7 +250,7 @@ WordList* getFiles(char* path, char* wildcardedString){
 
     while((dir = readdir(directory)) != NULL){
 
-      if(wildcardedString != NULL && dir->d_name != NULL && strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..") && wildcardedStringMatches(wildcardedString, dir->d_name)){//sorry strcmp but I dont like you :(
+      if(wildcardedString != NULL && strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..") && wildcardedStringMatches(wildcardedString, dir->d_name)){//sorry strcmp but I dont like you :(
 
         char* filePath = trueStrcat(path, dir->d_name);
         addEndWordList(files, filePath);

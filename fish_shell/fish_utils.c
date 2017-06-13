@@ -38,7 +38,8 @@ char *getInsult(){
 			(char *) "Oh ! Une erreur ! Comme ta vie en fait...",
 			(char *) "Nul !",
 			(char *) "Pense à aller à l'école un jour",
-			(char *) "Et après on dit que c'est la faute de l'ordinateur..."
+			(char *) "Et après on dit que c'est la faute de l'ordinateur...",
+			(char *) "Tocard !"
 	};
 	if (!init){
 		srand((unsigned int) time(NULL));

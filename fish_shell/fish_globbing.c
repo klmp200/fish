@@ -8,21 +8,21 @@
 
 WordList * fishExpand(WordList *wordList) {
 
-	if(wordList->size > 1){
+  if(wordList->size > 1){
 
-		int i;
-		WordList* newWordList = createWordList();// creating the list to return
+    int i;
+    WordList* newWordList = createWordList();// creating the list to return
 
-		if(newWordList == NULL){//crash when the allocation is unsuccessful
-			crash();
+    if(newWordList == NULL){//crash when the allocation is unsuccessful
+      crash();
     }
 
     addEndWordList(newWordList, wordList->first->word);//copy the command into the returning word list
 
 
-		WordListElement* tempElement = wordList->first->next; //temporary nav element
+    WordListElement* tempElement = wordList->first->next; //temporary nav element
 
-		for(i=1; i<wordList->size; i++){
+    for(i=1; i<wordList->size; i++){
 
       //TODO : optimize the stringContains() function to test for a list of characters
       //test if we have to expand a string or not, for optimization purposes
@@ -36,7 +36,7 @@ WordList * fishExpand(WordList *wordList) {
         addEndWordList(newWordList, tempElement->word);
       }
 
-			tempElement = tempElement->next;
+      tempElement = tempElement->next;
 
 
     }
@@ -47,9 +47,9 @@ WordList * fishExpand(WordList *wordList) {
     if(newWordList->size == 1){
       addEndWordList(newWordList, (char*) ERROR_STRING);
     }
-		return newWordList;
+    return newWordList;
 
-	}
+  }
 
   else return wordList;
 
@@ -125,22 +125,22 @@ void recursiveExpandWord(char* path, WordList* listToExpand){
       char* concatenedEndOfPath = concatWordListToWord(pathToList, indexToExpand, pathToList->size - 1);
       int isDir;
 
-        for(i=0; i < foundFiles->size; i++){
+      for(i=0; i < foundFiles->size; i++){
 
-          tmpWord = tempElement->word;
+	tmpWord = tempElement->word;
 
-          isDir = isDirectory(tmpWord);
+	isDir = isDirectory(tmpWord);
 
-          tempElement->word = trueStrcat(tempElement->word, concatenedEndOfPath);
-          free(tmpWord);
-          tmpWord = NULL;
-          if(isDir){
-            recursiveExpandWord(tempElement->word, listToExpand);
-          }
+	tempElement->word = trueStrcat(tempElement->word, concatenedEndOfPath);
+	free(tmpWord);
+	tmpWord = NULL;
+	if(isDir){
+	  recursiveExpandWord(tempElement->word, listToExpand);
+	}
 
-          tempElement = tempElement->next;
+	tempElement = tempElement->next;
 
-        }
+      }
 
       free(concatenedEndOfPath);
 
@@ -207,7 +207,7 @@ char* getFileName(char* string){
       i--;
     }
 
-   return strndup(string + i + 1,wordSize);
+    return strndup(string + i + 1,wordSize);
 
   }
 
@@ -239,96 +239,100 @@ char* getPath(char* string){
 
 WordList* getFiles(char* path, char* wildcardedString){
 
-	DIR* directory;
-	dirent* dir;
+  DIR* directory;
+  dirent* dir;
 
-	WordList* files = createWordList();
+  WordList* files = createWordList();
   if(files == NULL) crash();
 
 
-	if((directory = opendir(path)) != NULL){
+  if((directory = opendir(path)) != NULL){
 
-		while((dir = readdir(directory)) != NULL){
+    while((dir = readdir(directory)) != NULL){
 
-			if(strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..") && wildcardedStringMatches(wildcardedString, dir->d_name)){//sorry strcmp but I dont like you :(
+      if(wildcardedString != NULL && dir->d_name != NULL && strcmp(dir->d_name, ".") && strcmp(dir->d_name, "..") && wildcardedStringMatches(wildcardedString, dir->d_name)){//sorry strcmp but I dont like you :(
 
         char* filePath = trueStrcat(path, dir->d_name);
         addEndWordList(files, filePath);
         free(filePath);
 
-			}
+      }
 
-		}
+    }
 
     closedir(directory); //YY U LEAK MEMORY ? NOT ON MY WATCH
 
 
-	}
+  }
 
-	return files;
+  return files;
 
 }
 
 
 int wildcardedStringMatches(char* string1, char* string2){//TODO
 
-	int i = 0;
-	char tempIChar;
-	int j = 0;
+  int i = 0;
+  char tempIChar;
+  int j = 0;
 
-	if(string1 != NULL && string2 != NULL){
+  if(string1 != NULL && string2 != NULL){
 
-		while(string1[i] != '\0' && string2[j] != '\0'){
+    while(string1[i] != '\0' && string2[j] != '\0'){
 
-			if(string1[i] == '*'){
+      if(string1[i] == '*'){
 
-				tempIChar = string1[i+1];
+	tempIChar = string1[i+1];
 
-				while(string2[j] != tempIChar){
+	if(tempIChar == '\0'){
+	  return 1;
+	}
 
-					j++;
+	while(string2[j] != tempIChar){
 
-					if(string2[j] == '\0' && tempIChar == '\0'){
-						return 1;
-					}
+	  j++;
 
-				}
-
-				i++;
-
-			}
-
-			if(string1[i] != string2[j] && string1[i] != '?'){
-
-				return 0;
-
-			}
-
-			i++;
-			j++;
-
-		}
-
-		if(string1[i] == '\0' && string2[j] == '\0'){
-
-			return 1;
-
-		}
-		else{
-
-			return 0;
-
-		}
+	  if(string2[j] == '\0'){
+	    return 0;
+	  }
 
 	}
 
-	else{
+	i++;
 
-		printf("fish : Warning : fuck you, strings are considered null");
-		crash();
-		return 0;
+      }
 
-	}
+      if(string1[i] != string2[j] && string1[i] != '?'){
+
+	return 0;
+
+      }
+
+      i++;
+      j++;
+
+    }
+
+    if(string1[i] == '\0' && string2[j] == '\0'){
+
+      return 1;
+
+    }
+    else{
+
+      return 0;
+
+    }
+
+  }
+
+  else{
+
+    printf("fish : Warning : fuck you, strings are considered null");
+    crash();
+    return 0;
+
+  }
 
 }
 

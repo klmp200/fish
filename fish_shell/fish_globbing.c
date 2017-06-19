@@ -270,7 +270,7 @@ WordList* getFiles(char* path, char* wildcardedString){
 }
 
 
-int wildcardedStringMatches(char* string1, char* string2){//TODO
+int wildcardedStringMatches(char* string1, char* string2){
 
   int i = 0;
   char tempIChar;

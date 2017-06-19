@@ -8,7 +8,7 @@
 #include "fish_types.h"
 #include "fish_settings.h"
 
-/* Necessary global variables */
+/* Necessary global variable */
 char * builtinCommandsStr[] = {
 		(char *) "clear",
 		(char *) "kek",
@@ -17,6 +17,7 @@ char * builtinCommandsStr[] = {
 		(char *) "exit"
 };
 
+/* Necessary global variable */
 builtinCommand *builtinCommands[] = {
 		&fishClear,
 		&fishKek,

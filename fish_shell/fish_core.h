@@ -23,18 +23,25 @@ WordList * split(char *string, char *separator); // Tested
 
 /* General purpose functions */
 
+/* Main loop of the project */
 void fishLoop(Settings * settings);
 
+/* Get the user input */
 char * fishReadLine();
 
+/* Count the number of occurrences of a given regex pattern */
 int countSeparators(char *string, char *regex); // Tested
 
+/* Execute an external command */
 int fishLoad(WordArray *array);
 
+/* Handle operators in the user input */
 int fishExecute(WordList *list);
 
+/* Cut a WordList at the given operator regex pattern */
 WordList *parseWordList(WordList *list, shell_operator *an_operator);
 
+/* Choose between internal and external command */
 int loadRightCommand(WordArray *array);
 
 /* IN/OUT functions */
